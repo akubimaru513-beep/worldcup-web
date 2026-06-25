@@ -6,6 +6,14 @@
 <title>你是哪位球星？2026世界杯人格测试</title>
 <meta property="og:title" content="你是哪位球星？2026世界杯人格测试">
 <meta property="og:description" content="30道题，测出你最像哪位球星">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DKN2Z72X26"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DKN2Z72X26');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -732,6 +740,42 @@
     text-align: right;
   }
 
+  /* Support card */
+  .support-card {
+    background: var(--bg2);
+    border: 1px solid var(--gray3);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .support-text {
+    font-size: 15px;
+    color: #555555;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .btn-coffee {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFDD00;
+    color: #000000;
+    font-family: var(--font-en);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 28px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .btn-coffee:hover {
+    background: #FFE833;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255,221,0,0.4);
+  }
+
   /* Share & retry */
   .result-actions {
     position: fixed;
@@ -978,7 +1022,7 @@
   </div>
 </div>
 
-<!-- ===== AD ===== -->
+<!-- ===== LOADING ===== -->
 <div id="screen-ad" class="screen">
   <div class="ad-placeholder-fullscreen">
     <div class="ad-analyzing" id="ad-analyzing-text">ANALYZING YOUR PERSONALITY</div>
@@ -989,8 +1033,7 @@
     </div>
     <div class="ad-title" id="ad-main-title">正在匹配你的球星…</div>
     <div class="ad-sub" id="ad-sub-text">根据你的30个选择，生成专属分析</div>
-    <div class="ad-inner-box">AD</div>
-    <div class="ad-timer"><span id="ad-countdown-label">结果将在</span> <span id="ad-countdown">5</span> <span id="ad-countdown-suffix">秒后揭晓</span></div>
+    <div class="ad-timer"><span id="ad-countdown-label">结果将在</span> <span id="ad-countdown">3</span> <span id="ad-countdown-suffix">秒后揭晓</span></div>
   </div>
 </div>
 
@@ -1046,6 +1089,18 @@
     <div class="result-section">
       <div class="result-section-title">相似球星排行</div>
       <div class="similar-list" id="similar-list"></div>
+    </div>
+
+    <!-- 打赏区块 -->
+    <div class="result-section">
+      <div class="result-section-title" id="support-title">支持创作者</div>
+      <div class="support-card">
+        <div class="support-text" id="support-text">如果这个测试让你会心一笑，请我喝杯咖啡？☕</div>
+        <a href="https://buymeacoffee.com/akubimaru" target="_blank" class="btn-coffee">
+          <span>☕</span>
+          <span id="support-btn-text">Buy Me a Coffee</span>
+        </a>
+      </div>
     </div>
 
     <div style="height: 80px;"></div>
@@ -1449,6 +1504,9 @@ const i18n = {
     partnerSub: '你们在场上天作之合',
     shareBtn: '📤 分享结果',
     retryBtn: '重测',
+    supportTitle: '支持创作者',
+    supportText: '如果这个测试让你会心一笑，请我喝杯咖啡？☕',
+    supportBtn: 'Buy Me a Coffee',
   },
   en: {
     landingEyebrow: '2026 World Cup · Personality Test',
@@ -1476,6 +1534,9 @@ const i18n = {
     partnerSub: 'A perfect match on the pitch',
     shareBtn: '📤 Share Result',
     retryBtn: 'Retake',
+    supportTitle: 'Support the Creator',
+    supportText: 'If this made you smile, consider buying me a coffee ☕',
+    supportBtn: 'Buy Me a Coffee',
   }
 }
 
@@ -1622,6 +1683,14 @@ function setLang(lang) {
     document.getElementById('ad-countdown-label').textContent = t.adCountdown
     document.getElementById('ad-countdown-suffix').textContent = t.adCountdown2
   }
+
+  // 打赏区块
+  const supportTitle = document.getElementById('support-title')
+  if (supportTitle) supportTitle.textContent = t.supportTitle
+  const supportText = document.getElementById('support-text')
+  if (supportText) supportText.textContent = t.supportText
+  const supportBtn = document.getElementById('support-btn-text')
+  if (supportBtn) supportBtn.textContent = t.supportBtn
 
   // 如果结果页是active，重新渲染结果
   if (document.getElementById('screen-result').classList.contains('active')) {
