@@ -959,6 +959,7 @@
 <div class="lang-switch">
   <button class="lang-btn active" onclick="setLang('zh')" id="btn-zh">中文</button>
   <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+  <button class="lang-btn" onclick="setLang('ja')" id="btn-ja">日本語</button>
 </div>
 
 
@@ -1412,7 +1413,10 @@ function showResult() {
   const starData = getStarData(top.name)
 
   document.getElementById('result-pct').textContent = top.pct + '%'
-  document.getElementById('result-name').textContent = currentLang === 'en' ? (starsEn[top.name] ? starsEn[top.name].name : top.name) : top.name
+  let displayStarName = top.name
+  if (currentLang === 'en' && starsEn[top.name]) displayStarName = starsEn[top.name].name
+  else if (currentLang === 'ja' && starsJa[top.name]) displayStarName = starsJa[top.name].name
+  document.getElementById('result-name').textContent = displayStarName
   document.getElementById('result-type').textContent = starData.type
   document.getElementById('result-country').textContent = starData.country
   document.getElementById('result-img').src = 'images/stars/' + starData.image + '.jpg'
@@ -1431,6 +1435,8 @@ function showResult() {
     let partnerDisplay = starData.partner
     if (currentLang === 'en' && starsEn[starData.partner]) {
       partnerDisplay = starsEn[starData.partner].name
+    } else if (currentLang === 'ja' && starsJa[starData.partner]) {
+      partnerDisplay = starsJa[starData.partner].name
     }
     document.getElementById('partner-name').textContent = partnerDisplay
   } else {
@@ -1442,7 +1448,9 @@ function showResult() {
   top3.forEach((s, i) => {
     const item = document.createElement('div')
     item.className = 'similar-item'
-    const displayName = currentLang === 'en' && starsEn[s.name] ? starsEn[s.name].name : s.name
+    let displayName = s.name
+    if (currentLang === 'en' && starsEn[s.name]) displayName = starsEn[s.name].name
+    else if (currentLang === 'ja' && starsJa[s.name]) displayName = starsJa[s.name].name
     item.innerHTML = `
       <span class="similar-name">${i === 0 ? '⭐ ' : ''}${displayName}</span>
       <div class="similar-bar-wrap"><div class="similar-bar-fill" style="width:${s.pct}%;opacity:${i===0?1:0.5}"></div></div>
@@ -1537,6 +1545,36 @@ const i18n = {
     supportTitle: 'Support the Creator',
     supportText: 'If this made you smile, consider buying me a coffee ☕',
     supportBtn: 'Buy Me a Coffee',
+  },
+  ja: {
+    landingEyebrow: '2026 ワールドカップ · 性格診断',
+    landingTitle: 'あなたはどの',
+    landingHighlight: '選手？',
+    landingSubtitle: '30問で、あなたが最も似ているサッカー選手を診断<br>あなたのW杯での運命は？',
+    landingStart: 'テスト開始 →',
+    landingMeta: '30問 · 約3分',
+    progressGroups: ['第1セクション：プレッシャーのあなた','第1セクション：プレッシャーのあなた','第1セクション：プレッシャーのあなた','第1セクション：プレッシャーのあなた','第1セクション：プレッシャーのあなた','第2セクション：日常のあなた','第2セクション：日常のあなた','第2セクション：日常のあなた','第2セクション：日常のあなた','第2セクション：日常のあなた','第3セクション：極限状況のあなた','第3セクション：極限状況のあなた','第3セクション：極限状況のあなた','第3セクション：極限状況のあなた','第3セクション：極限状況のあなた','第4セクション：あなたと他者','第4セクション：あなたと他者','第4セクション：あなたと他者','第4セクション：あなたと他者','第4セクション：あなたと他者','第4セクション：あなたと他者','第4セクション：あなたと他者','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識','第5セクション：自己認識'],
+    prevBtn: '← 前へ',
+    nextBtn: '次へ →',
+    finishBtn: '結果を見る →',
+    adAnalyzing: 'ANALYZING YOUR PERSONALITY',
+    adTitle: 'あなたの選手を探しています…',
+    adTitle2: '結果を生成中…',
+    adSub: '30問の回答をもとに分析しています',
+    adCountdown: '結果まで',
+    adCountdown2: '秒後に表示されます',
+    resultEyebrow: 'あなたは',
+    resultPctLabel: '一致',
+    resultSectionDesc: 'あなたの性格',
+    resultSectionDestiny: 'W杯での運命',
+    resultSectionPartner: 'ベストパートナー',
+    resultSectionSimilar: '似ている選手',
+    partnerSub: 'ピッチでは最高のコンビ',
+    shareBtn: '📤 結果をシェア',
+    retryBtn: 'もう一度',
+    supportTitle: 'クリエイターを応援',
+    supportText: 'このテストが楽しかったら、コーヒー一杯おごってください ☕',
+    supportBtn: 'Buy Me a Coffee',
   }
 }
 
@@ -1616,10 +1654,87 @@ const destinyEn = {
   '无缘参赛': { emoji:'⭐', title:"Absent is still a kind of presence", desc:"You should have been there." },
 }
 
+const destinyJa = {
+  '冠军':   { emoji:'🏆', title:'あなたがトロフィーを掲げる人', desc:'運じゃない。初日から準備ができていた。' },
+  '亚军':   { emoji:'🔥', title:'最後の一歩まで来たけど、踏み越えられなかった', desc:'これは失敗じゃない。完璧に最も近い場所にいた。' },
+  '四强':   { emoji:'⚡', title:'実力を証明した。でも物語は最高の場面で止まった', desc:'ベスト4で十分と言う人もいる。あなたはもっと行けたとわかっている。' },
+  '八强':   { emoji:'⚔️', title:'ほとんどの人を倒した。でもそのドアは開かなかった', desc:'後悔はない。でももう一度やったら、違う結果になる。' },
+  '十六强': { emoji:'🫡', title:'出場できた。でも世界に覚えてもらう前に終わった', desc:'大丈夫。物語が途中から始まることもある。' },
+  '小组赛出局': { emoji:'😢', title:'来た、戦った。でも今回はそのタイミングじゃなかった', desc:'舞台を待つことも必要。あなたにはまだ時間がある。' },
+  '无缘参赛': { emoji:'⭐', title:'不在もまた、存在の一形態', desc:'あなたはそこにいるべきだった。' },
+}
+
+const questionsJa = [
+  { id:"Q1", text:"大事なことをやって失敗した。最初の反応は？", options:[{key:"A",text:"3回見直して、すべての失敗点を探す"},{key:"B",text:"数時間黙って、次は必ず勝つと自分に言い聞かせる"},{key:"C",text:"友達に「大丈夫」と言って、一人で消化する"},{key:"D",text:"精一杯やったと思って、すっきりする"}] },
+  { id:"Q2", text:"人前で能力を疑われた。あなたは？", options:[{key:"A",text:"黙って、結果で答える"},{key:"B",text:"その場で反論して、一歩も引かない"},{key:"C",text:"笑顔で意見を認めるけど、心では覚えておく"},{key:"D",text:"一瞬自信をなくして、また立ち上がる"}] },
+  { id:"Q3", text:"チームが崩壊しそう。あなたは？", options:[{key:"A",text:"疲れていても前に出て支える"},{key:"B",text:"黙ってもう少し多くこなす"},{key:"C",text:"核心的な問題を見つけて解決する"},{key:"D",text:"まず気持ちを落ち着かせて、それから考える"}] },
+  { id:"Q4", text:"3連敗続き。あなたの状態は？", options:[{key:"A",text:"負けるほど勝ちたくなる。止まれない"},{key:"B",text:"一晩一人でいて、翌日また始める"},{key:"C",text:"誰かに話す。それで十分"},{key:"D",text:"発想を変える。失敗は方向性を見直すサイン"}] },
+  { id:"Q5", text:"自分より努力している人がいるけど、自分の方が才能がある。どう思う？", options:[{key:"A",text:"才能はスタートライン。努力がゴールライン"},{key:"B",text:"才能があるなら使わなきゃ。先に走る"},{key:"C",text:"少し不安だけど、認めない"},{key:"D",text:"両方大事。どちらかだけじゃだめ"}] },
+  { id:"Q6", text:"友達と集まったとき、あなたは？", options:[{key:"A",text:"みんなを楽しくさせる存在"},{key:"B",text:"あまり話さないけど、一言が重い"},{key:"C",text:"観察して、場を変える一言をたまに言う"},{key:"D",text:"楽しむけど、早めに帰りたい"}] },
+  { id:"Q7", text:"誰かとの関係が薄れてきた。あなたは？", options:[{key:"A",text:"自分から連絡する。関係は大事"},{key:"B",text:"流れに任せる。薄れたならそれまで"},{key:"C",text:"気づいているけど気づかないふりをする"},{key:"D",text:"原因を考えて、自分が悪かったかもと思う"}] },
+  { id:"Q8", text:"相手がずっと前から気づいていたミスを犯している。あなたは？", options:[{key:"A",text:"直接言う。言わない方がつらい"},{key:"B",text:"聞かれるまで待つ"},{key:"C",text:"遠回しにヒントを出す"},{key:"D",text:"自分で気づかせる。経験が大事"}] },
+  { id:"Q9", text:"褒められた。反応は？", options:[{key:"A",text:"嬉しいけど、まだ足りないと言う"},{key:"B",text:"ありがとうと言って、また自分のことをする"},{key:"C",text:"少し照れるけど、内心嬉しい"},{key:"D",text:"具体的にどこが良かったか聞く"}] },
+  { id:"Q10", text:"理想の一日は？", options:[{key:"A",text:"全部効率よくこなして、達成感を感じる"},{key:"B",text:"計画なし。流れに任せる"},{key:"C",text:"大切な人と一緒に、何をしてもいい"},{key:"D",text:"一人でゆっくり。充電する"}] },
+  { id:"Q11", text:"ある舞台に立てなかった。一番近い理由は？", options:[{key:"A",text:"誰かが決めた。私には聞かれさえしなかった"},{key:"B",text:"チームが私をそこまで連れて行けなかった"},{key:"C",text:"その舞台には立った。ただ時が来ただけ"},{key:"D",text:"自分で別の道を選んだ"}] },
+  { id:"Q12", text:"大きな才能があるのに、運命がずっと邪魔をしている。あなたは？", options:[{key:"A",text:"待ち続ける。チャンスは必ず来る"},{key:"B",text:"別の道を探す。才能は他でも輝ける"},{key:"C",text:"怒る。でも怒りが原動力"},{key:"D",text:"受け入れる。努力だけでは変えられないことがある"}] },
+  { id:"Q13", text:"一つしか選べないなら？", options:[{key:"A",text:"全員に覚えられるけど、孤独な一生"},{key:"B",text:"少数の人に本当に理解されて、普通の一生"},{key:"C",text:"短い輝きの瞬間、でもその瞬間は永遠"},{key:"D",text:"安定したパフォーマンス。山もないが谷もない"}] },
+  { id:"Q14", text:"試合残り1分、1点差で負けている。出番が来た。あなたは？", options:[{key:"A",text:"こういう瞬間のために生まれてきた"},{key:"B",text:"冷静に。時間よりチャンスの方が多い"},{key:"C",text:"少し足がすくむけど、出たら全力"},{key:"D",text:"一番調子の良い選手にボールを渡す"}] },
+  { id:"Q15", text:"人生が試合なら、今は何分？", options:[{key:"A",text:"前半終わり。休憩中"},{key:"B",text:"後半始まり。リズムをつかんできた"},{key:"C",text:"アディショナルタイム。一番重要な時"},{key:"D",text:"笛が鳴った。でもまだ蹴りたい"}] },
+  { id:"Q16", text:"全力で助けた人が、その功績を他人のものにした。あなたは？", options:[{key:"A",text:"その場で「これは私がやった」と言う"},{key:"B",text:"言わない。でも二度と助けない"},{key:"C",text:"どうでもいい。自分がやったことはわかっている"},{key:"D",text:"少し悲しいけど、許す"}] },
+  { id:"Q17", text:"チームにサボっている人がいる。あなたは？", options:[{key:"A",text:"直接指摘する。みんな見ている"},{key:"B",text:"こっそり話す。逃げ道を作ってあげる"},{key:"C",text:"自分が少し多くやる。穴を埋める"},{key:"D",text:"リーダーに言う。それが仕事"}] },
+  { id:"Q18", text:"自分より弱い人が挑戦してきた。あなたは？", options:[{key:"A",text:"真剣に対応する。相手の強さは関係ない"},{key:"B",text:"加減する。潰す必要はない"},{key:"C",text:"少し面倒だけど、無視もしない"},{key:"D",text:"その人が本当に向いている場所を探す"}] },
+  { id:"Q19", text:"親友と意見が全く違う。あなたは？", options:[{key:"A",text:"自分を貫く。友情と意見は別"},{key:"B",text:"真剣に聞く。相手が正しいかもしれない"},{key:"C",text:"中間点を見つける。どちらも完全には譲らない"},{key:"D",text:"表面上は同意して、裏では自分のやり方でやる"}] },
+  { id:"Q20", text:"誰かがずっと自分を真似している。どう思う？", options:[{key:"A",text:"模倣は最高の賛辞。受け入れる"},{key:"B",text:"少し嫌だけど、気にしない"},{key:"C",text:"差をつけるためもっと頑張る"},{key:"D",text:"教えて、自分を超えさせる"}] },
+  { id:"Q21", text:"チームを率いたけど結果がよくなかった。あなたは？", options:[{key:"A",text:"責任は自分にある。自分が背負う"},{key:"B",text:"みんなの問題を振り返って一緒に改善"},{key:"C",text:"まずみんなの気持ちをケアして、それから改善"},{key:"D",text:"黙って、次の結果で語る"}] },
+  { id:"Q22", text:"「変わったね」と言われた。どう返す？", options:[{key:"A",text:"最初からこうだよ。あなたが知らなかっただけ"},{key:"B",text:"そうかも。成長って変わることだから"},{key:"C",text:"よく考えたら、少し当たっているかも"},{key:"D",text:"笑って、何も答えない"}] },
+  { id:"Q23", text:"自分の一番の才能は？", options:[{key:"A",text:"一番きつい時でも冷静でいられること"},{key:"B",text:"周りの人をよくすること"},{key:"C",text:"いつも一歩先を考えること"},{key:"D",text:"わからない。でもまだ全部出せていない"}] },
+  { id:"Q24", text:"人生で一番後悔することは？", options:[{key:"A",text:"あの時もう少し勇敢だったら"},{key:"B",text:"ある関係をもっと大切にすればよかった"},{key:"C",text:"あの舞台に立てたはずだった"},{key:"D",text:"まだわからない。終わっていないから"}] },
+  { id:"Q25", text:"深夜、眠れない。何を考えている？", options:[{key:"A",text:"今日どこかもっとうまくできたか"},{key:"B",text:"言えなかった言葉"},{key:"C",text:"あの時別の道を選んでいたら"},{key:"D",text:"何も考えていない。ただ眠れない"}] },
+  { id:"Q26", text:"他人から見た自分と、本当の自分は？", options:[{key:"A",text:"全然違う。誰も本当の自分を知らない"},{key:"B",text:"少し違うけど、気にしない"},{key:"C",text:"ほぼ同じ。透明に生きている"},{key:"D",text:"わからない。本当の自分も確かじゃない"}] },
+  { id:"Q27", text:"誰かが自分の伝記を書いたら、最後の一文は？", options:[{key:"A",text:"彼はそこにいるべきだったが、名前はリストになかった"},{key:"B",text:"彼は一人で廃墟を背負ったが、廃墟は彼を支えられなかった"},{key:"C",text:"彼はピッチを離れたが、ピッチは彼を離れなかった"},{key:"D",text:"彼は結果で人を納得させ、人は喜んで魅了された"}] },
+  { id:"Q28", text:"自分が一番過小評価されているのは？", options:[{key:"A",text:"どれだけ頑張っているか。誰も見ていない"},{key:"B",text:"自分が他人にとってどれだけ大切か。彼らは知らない"},{key:"C",text:"見た目より実はずっと賢い"},{key:"D",text:"特にない。評価はだいたい合っている"}] },
+  { id:"Q29", text:"いつかいなくなったら、何を覚えていてほしい？", options:[{key:"A",text:"彼は諦めなかった"},{key:"B",text:"彼が私をよくしてくれた"},{key:"C",text:"彼は他と違った"},{key:"D",text:"彼はここにいた。本当にいた"}] },
+  { id:"Q30", text:"最後の問い — 自分の物語は今どこにある？", options:[{key:"A",text:"序章が終わった。本編はまだ始まっていない"},{key:"B",text:"クライマックス。毎日が燃えている"},{key:"C",text:"中盤で壁にぶつかったけど、続いている"},{key:"D",text:"いくつかの章が終わらないうちに終わった。少し惜しい"}] },
+]
+
+const starsJa = {
+  "梅西": { name:"メッシ", country:"アルゼンチン", type:"天才型・静かな神", desc1:"部屋で一番静かなのに、いなくなると何かが足りない気がする人", quote:"天才は説明しない。時間が語る。" },
+  "C罗": { name:"ロナウド", country:"ポルトガル", type:"意志型・不屈の闘志", desc1:"「もう十分」と言われても「まだ足りない」と言う人", quote:"勝利が、あなたの唯一の結末。" },
+  "姆巴佩": { name:"エムバペ", country:"フランス", type:"野心型・冷静な刃", desc1:"笑顔で動きながら、相手はまだ彼を信じている人", quote:"冷静さは冷たさじゃない。遅れた満足の別名だ。" },
+  "哈兰德": { name:"ハーランド", country:"ノルウェー", type:"純粋型・ゴールだけ", desc1:"みんなが人生の意味を悩んでいる時に、今日のご飯を考えている人", quote:"世界は複雑だ。でもゴールはシンプルだ。" },
+  "贝林厄姆": { name:"ベリンガム", country:"イングランド", type:"リーダー型・生まれながらのキャプテン", desc1:"20歳なのに40歳のように生きて、でも目の中にまだ炎がある人", quote:"輝くために生まれた。理由は要らない。" },
+  "亚马尔": { name:"ヤマル", country:"スペイン", type:"少年天才型・無限の可能性", desc1:"どんな基準で評価すればいいかわからない、そんな人", quote:"恐れ知らず。危険を知らないからじゃなく、怖がる時間がないから。" },
+  "维尼修斯": { name:"ヴィニシウス", country:"ブラジル", type:"情熱型・炎の男", desc1:"感情が来たら止められない。でも過ぎたら誰より冷静な人", quote:"燃えた人だけが、本物を知る。" },
+  "内马尔": { name:"ネイマール", country:"ブラジル", type:"自由型・才能と魅力", desc1:"才能だけでも行けるのに、魅力も使う人", quote:"才能は贈り物。贈り物は楽しむためにある。" },
+  "凯恩": { name:"ケイン", country:"イングランド", type:"苦行型・静かな旗手", desc1:"100のことを地道にやって、できなかった1つだけ覚えられる人", quote:"すべての努力に結末があるわけじゃない。でも努力自体が答えだ。" },
+  "莫德里奇": { name:"モドリッチ", country:"クロアチア", type:"知性型・頭で踊る", desc1:"入ってくる時は誰も気づかない。出ていく時は全員が「あの人は誰だ」と聞く人", quote:"最高の存在感は、力を入れているように見せないことだ。" },
+  "久保建英": { name:"久保建英", country:"日本", type:"意志型・静かな突破口", desc1:"プレッシャーの中で育って、でも折れなかった人", quote:"プレッシャーは栄養。障害じゃない。" },
+  "孙兴慜": { name:"ソン・フンミン", country:"韓国", type:"責任型・旗を背負う", desc1:"みんなの期待を肩に乗せて、それでも笑顔でフルタイム走れる人", quote:"自分のために蹴る人もいる。みんなのために蹴る人もいる。あなたは後者だ。" },
+  "萨卡": { name:"サカ", country:"イングランド", type:"陽光型・安定したエネルギー", desc1:"一緒にいると、なんか難しいことが難しくなくなる気がする人", quote:"余裕は、一番学ぶのが難しいスキルだ。" },
+  "穆西亚拉": { name:"ムシアラ", country:"ドイツ", type:"インスピレーション型・小鹿", desc1:"次の動きが誰にも読めない。自分でさえも時々わからない人", quote:"ひらめきはスケジュールできない。待つしかない。" },
+  "维尔茨": { name:"ビルツ", country:"ドイツ", type:"精密型・全体を見る頭脳", desc1:"ボールが来る前にもう3手先を考えている人", quote:"考えてから動く。すべての一歩が意味を持つ。" },
+  "恩佐": { name:"エンソ・フェルナンデス", country:"アルゼンチン", type:"不死身型・走り続ける男", desc1:"誰も気づかない。でもいなくなると何も回らない人", quote:"全力は演技じゃない。習慣だ。" },
+  "哈基米": { name:"ハキミ", country:"モロッコ", type:"ダークホース型・実力で黙らせる", desc1:"みんなに過小評価されて、スピードですべての疑問を吹き飛ばす人", quote:"過小評価は贈り物。誰もあなたを警戒しない。" },
+  "范戴克": { name:"ファン・ダイク", country:"オランダ", type:"安定型・静かな大黒柱", desc1:"いないとみんな焦る。いると存在を忘れる人", quote:"最高の存在は、混乱に居場所を与えないことだ。" },
+  "萨拉赫": { name:"サラー", country:"エジプト", type:"逆転型・過小評価から神へ", desc1:"100回否定されて、101回目もまた立ち上がる人", quote:"逆転は運じゃない。積み重ねが爆発した瞬間だ。" },
+  "佩德里": { name:"ペドリ", country:"スペイン", type:"芸術型・パスの美学", desc1:"複雑なことをシンプルにして、シンプルなことを芸術にする人", quote:"サッカーは言語。あなたが話すのは詩だ。" },
+  "诺伊尔": { name:"ノイアー", country:"ドイツ", type:"守護型・最後の砦", desc1:"最後の砦なのに、最後の砦のように見えない人", quote:"守るのはゴールだけじゃない。みんなの自信だ。" },
+  "卢卡库": { name:"ルカク", country:"ベルギー", type:"楽天型・ポジティブの塊", desc1:"世界中が不安な時に、今夜のご飯を考えている人", quote:"批判する人は黙れ。応援する人はついてこい。" },
+  "沃齐尼亚": { name:"ヴォジーニャ", country:"カーボベルデ", type:"大器晩成型", desc1:"「もう遅い」とみんなが言う時に、「まだその時じゃない」と言う人", quote:"タイミングは遅すぎない。あなたがまだここにいる限り。" },
+  "B费": { name:"ブルーノ・フェルナンデス", country:"ポルトガル", type:"話題型・議論の中を進む", desc1:"みんなが意見を持っている。でもいなくても困る人", quote:"議論されるのは、議論される価値があるから。" },
+  "阿尔瓦雷斯": { name:"アルバレス", country:"アルゼンチン", type:"選択が努力を超える型", desc1:"正しいチームを選んで、実力でその選択が正しかったことを証明した人", quote:"方向を正しく選べば、努力は無駄にならない。" },
+  "登贝莱": { name:"デンベレ", country:"フランス", type:"司馬懿型・最後に笑う男", desc1:"みんなが「終わった」と思った時に、金のボールを取った人", quote:"最後に笑う人は、自分がやっていることを説明しない。" },
+  "奥利塞": { name:"オリーズ", country:"フランス", type:"爆発型・静かな一撃", desc1:"普段は誰も気にしない。爆発した瞬間、全員が驚く人", quote:"最高のサプライズは、予告しないことだ。" },
+  "帕尔默": { name:"パーマー", country:"イングランド", type:"埋もれた型・才能が公平なチャンスを待つ", desc1:"本当はそこにいるべきだった。でもいなかった。", quote:"欠席した人が、在席した人より覚えられることがある。", destinyDesc:"あなたはそこにいるべきだったが、誰かが代わりに決めた。才能は消えない。ただ公平なチャンスを待っているだけ。" },
+  "克瓦拉茨赫利亚": { name:"クヴァラツヘリア", country:"ジョージア", type:"遺珠型・国に阻まれた天才", desc1:"柵の向こうから緑のピッチを見ていた。風が髪を揺らしても、動かなかった。", quote:"惜しまれるために生まれた人もいる。でもその惜しさに特別な美しさがある。", destinyDesc:"あなたは外に立って、他の人がその舞台に上がるのを見ていた。あなたが足りないんじゃない。世界がまだあなたの良さを受け止める準備ができていなかっただけ。" },
+  "苏亚雷斯": { name:"スアレス", country:"ウルグアイ", type:"落幕型・本当に愛した人", desc1:"スタンドに座って、飲み物を片手に、言葉にならない笑みを浮かべていた。", quote:"本当に愛した人は、去った後もまた振り返る。", destinyDesc:"あなたのW杯はスタンドで続く。足で蹴る人もいる。心で蹴る人もいる。あなたは後者だから、本当には離れない。" },
+}
+
 function setLang(lang) {
   currentLang = lang
   document.getElementById('btn-zh').classList.toggle('active', lang === 'zh')
   document.getElementById('btn-en').classList.toggle('active', lang === 'en')
+  document.getElementById('btn-ja').classList.toggle('active', lang === 'ja')
 
   const t = i18n[lang]
 
@@ -1699,7 +1814,9 @@ function setLang(lang) {
 }
 
 function getQuestions() {
-  return currentLang === 'en' ? questionsEn : questions
+  if (currentLang === 'en') return questionsEn
+  if (currentLang === 'ja') return questionsJa
+  return questions
 }
 
 function getStarData(zhName) {
@@ -1708,11 +1825,16 @@ function getStarData(zhName) {
     const en = starsEn[zhName]
     if (en) return { ...base, name: en.name, country: en.country, type: en.type, desc1: en.desc1, quote: en.quote, destinyDesc: en.destinyDesc }
   }
+  if (currentLang === 'ja') {
+    const ja = starsJa[zhName]
+    if (ja) return { ...base, name: ja.name, country: ja.country, type: ja.type, desc1: ja.desc1, quote: ja.quote, destinyDesc: ja.destinyDesc }
+  }
   return base
 }
 
 function getDestinyData(destinyKey) {
   if (currentLang === 'en') return destinyEn[destinyKey]
+  if (currentLang === 'ja') return destinyJa[destinyKey]
   return destinyLevels[destinyKey]
 }
 
