@@ -1,0 +1,29 @@
+<view class="quiz-container">
+  <!-- Progress bar -->
+  <view class="progress-wrap">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{progress}}%"></view>
+    </view>
+    <view class="progress-text">{{current + 1}} / {{total}}</view>
+  </view>
+
+  <!-- Question -->
+  <view class="question-wrap">
+    <view class="q-index">Q{{current + 1}}</view>
+    <view class="q-text">{{questions[current].text}}</view>
+  </view>
+
+  <!-- Options -->
+  <view class="options-wrap">
+    <view
+      wx:for="{{questions[current].options}}"
+      wx:key="key"
+      class="option-item {{selectedKey === item.key ? 'selected' : ''}} {{selectedKey && selectedKey !== item.key ? 'dimmed' : ''}}"
+      data-key="{{item.key}}"
+      bindtap="onSelectOption"
+    >
+      <view class="option-key">{{item.key}}</view>
+      <view class="option-text">{{item.text}}</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,29 @@
+<view class="ad-container">
+  <view class="loading-section">
+    <view class="soccer-ball">⚽</view>
+    <view class="loading-title">正在分析你的性格特征…</view>
+    <view class="loading-dots">
+      <view class="dot dot1"></view>
+      <view class="dot dot2"></view>
+      <view class="dot dot3"></view>
+    </view>
+    <view class="loading-sub">15题答完，马上进入下半场</view>
+  </view>
+
+  <!-- 广告位 -->
+  <view class="ad-wrap" wx:if="{{adReady}}">
+    <ad unit-id="YOUR_AD_UNIT_ID" bindload="onAdLoad" binderror="onAdError"></ad>
+  </view>
+
+  <!-- 继续按钮 -->
+  <view class="btn-wrap">
+    <button
+      class="btn-continue {{canSkip ? 'active' : 'disabled'}}"
+      bindtap="onContinue"
+      disabled="{{!canSkip}}"
+    >
+      <text wx:if="{{canSkip}}">查看结果 →</text>
+      <text wx:else>{{countdown}}s 后可继续</text>
+    </button>
+  </view>
+</view>

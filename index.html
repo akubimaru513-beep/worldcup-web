@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你是哪位球星？2026世界杯人格测试</title>
+<meta property="og:title" content="你是哪位球星？2026世界杯人格测试">
+<meta property="og:description" content="30道题，测出你最像哪位球星">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F5F0;
+    --bg2: #FFFFFF;
+    --bg3: #ECECEA;
+    --accent: #1A1A1A;
+    --accent-dim: rgba(0,0,0,0.06);
+    --accent-dim2: rgba(0,0,0,0.03);
+    --accent-green: #00C853;
+    --white: #1A1A1A;
+    --gray1: #888888;
+    --gray2: #BBBBBB;
+    --gray3: #E0E0DC;
+    --font-en: 'Space Grotesk', sans-serif;
+    --font-cn: 'Noto Sans SC', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: #1A1A1A;
+    font-family: var(--font-cn);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ===== LANDING ===== */
+  #screen-landing {
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    overflow: hidden;
+  }
+
+  .landing-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .landing-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,200,83,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -60%);
+    pointer-events: none;
+  }
+
+  .landing-content {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .landing-eyebrow {
+    font-family: var(--font-en);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .landing-title {
+    font-size: clamp(36px, 10vw, 64px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .landing-title .highlight {
+    color: var(--accent-green);
+    display: block;
+  }
+
+  .landing-subtitle {
+    font-size: 15px;
+    color: var(--gray1);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .star-parade {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  .star-parade-item {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--bg);
+    overflow: hidden;
+    margin-left: -16px;
+    background: var(--bg3);
+    transition: transform 0.2s;
+  }
+
+  .star-parade-item:first-child { margin-left: 0; }
+
+  .star-parade-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .star-parade-item:hover { transform: translateY(-6px) scale(1.05); z-index: 10; }
+
+  .btn-start {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    font-family: var(--font-cn);
+    font-size: 17px;
+    font-weight: 700;
+    padding: 16px 40px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    letter-spacing: 0.02em;
+  }
+
+  .btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+
+  .btn-start:active { transform: translateY(0); }
+
+  .landing-meta {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--gray2);
+    font-family: var(--font-en);
+  }
+
+  /* ===== QUIZ ===== */
+  #screen-quiz {
+    padding: 0;
+  }
+
+  .quiz-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--gray3);
+    padding: 16px 24px;
+  }
+
+  .progress-bar-wrap {
+    width: 100%;
+    height: 3px;
+    background: var(--gray3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent-green);
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 2px;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .progress-label {
+    font-family: var(--font-en);
+    font-size: 12px;
+    color: var(--gray1);
+    font-weight: 500;
+  }
+
+  .progress-num {
+    font-family: var(--font-en);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-green);
+  }
+
+  .quiz-body {
+    flex: 1;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  .question-group-label {
+    font-family: var(--font-en);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.9;
+  }
+
+  .question-text {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--bg2);
+    border: 1px solid var(--gray3);
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+    color: var(--white);
+    font-family: var(--font-cn);
+    font-size: 15px;
+    line-height: 1.5;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-dim2);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .option-btn:hover {
+    border-color: #1A1A1A;
+    background: var(--accent-dim);
+  }
+
+  .option-btn:hover::before { opacity: 1; }
+
+  .option-btn.selected {
+    border-color: #1A1A1A;
+    background: var(--accent-dim);
+  }
+
+  .option-btn.selected .option-key {
+    background: #1A1A1A;
+    color: #FFFFFF;
+  }
+
+  .option-key {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gray2);
+    font-family: var(--font-en);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray1);
+    transition: all 0.15s;
+  }
+
+  .quiz-nav {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px 40px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-prev {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--gray3);
+    color: var(--gray1);
+    font-family: var(--font-cn);
+    font-size: 15px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-prev:hover { border-color: var(--gray1); color: var(--white); }
+
+  .btn-next {
+    flex: 1;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    border: none;
+    font-family: var(--font-cn);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .btn-next.enabled {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .btn-next.enabled:hover { filter: brightness(1.1); }
+
+  /* ===== AD SCREEN ===== */
+  #screen-ad {
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+  }
+
+  .ad-content {
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    padding: 40px 24px;
+  }
+
+  .ad-analyzing {
+    font-family: var(--font-en);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .ad-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .ad-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gray2);
+    animation: dotPulse 1.4s infinite;
+  }
+
+  .ad-dot:nth-child(2) { animation-delay: 0.2s; }
+  .ad-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotPulse {
+    0%, 80%, 100% { background: var(--gray2); transform: scale(1); }
+    40% { background: var(--accent-green); transform: scale(1.3); }
+  }
+
+  .ad-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .ad-sub {
+    font-size: 14px;
+    color: var(--gray1);
+    margin-bottom: 32px;
+  }
+
+  /* Ad placeholder */
+  .ad-placeholder {
+    width: 100%;
+    max-width: 360px;
+    height: 250px;
+    background: var(--bg3);
+    border: 1px dashed var(--gray3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 12px;
+    color: var(--gray2);
+    font-family: var(--font-en);
+  }
+
+  .ad-placeholder-fullscreen {
+    position: fixed;
+    inset: 0;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    gap: 0;
+    padding: 32px 24px;
+  }
+
+  .ad-placeholder-fullscreen .ad-inner-box {
+    width: 100%;
+    max-width: 400px;
+    flex: 1;
+    background: var(--bg3);
+    border: 1px dashed var(--gray3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--gray2);
+    font-family: var(--font-en);
+    margin: 20px 0;
+  }
+
+  .ad-timer {
+    font-family: var(--font-en);
+    font-size: 13px;
+    color: var(--gray1);
+  }
+
+  .ad-timer span {
+    color: var(--accent-green);
+    font-weight: 700;
+  }
+
+  /* ===== RESULT ===== */
+  #screen-result {
+    padding: 0;
+  }
+
+  .result-hero {
+    position: relative;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--gray3);
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .result-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 80%, rgba(0,200,83,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* 球星图片铺满顶部，文字叠在下方 */
+  .result-hero-inner {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 图片区：全宽，固定高度，图片居中 */
+  .result-img-side {
+    width: 100%;
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    background: #F0F0EB;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .result-star-img {
+    height: 260px;
+    width: auto;
+    max-width: 300px;
+    object-fit: contain;
+    object-position: bottom center;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* 图片四周渐变遮罩，融入背景 */
+  .result-img-side::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, #F0F0EB, transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .result-img-side::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, #FFFFFF);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 文字区在图片下方 */
+  .result-text-side {
+    padding: 16px 24px 28px;
+    position: relative;
+  }
+
+  .result-eyebrow {
+    font-family: var(--font-en);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: var(--accent-green);
+    text-transform: uppercase;
+    margin-bottom: 0;
+    opacity: 0.9;
+  }
+
+  .result-pct-display {
+    font-family: var(--font-en);
+    font-size: clamp(64px, 18vw, 100px);
+    font-weight: 800;
+    line-height: 0.9;
+    color: #1A1A1A;
+    letter-spacing: -0.04em;
+    margin-bottom: 0;
+  }
+
+  .result-pct-label {
+    font-size: 12px;
+    color: var(--gray1);
+    margin-bottom: 10px;
+    margin-top: 2px;
+  }
+
+  .result-star-name {
+    font-size: clamp(32px, 8vw, 48px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .result-star-type {
+    font-size: 13px;
+    color: var(--accent-green);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  .result-star-country {
+    font-size: 13px;
+    color: var(--gray1);
+    margin-top: 4px;
+    font-family: var(--font-cn);
+  }
+
+  .result-body {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .result-section {
+    margin-bottom: 32px;
+  }
+
+  .result-section-title {
+    font-family: var(--font-en);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--gray1);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray3);
+  }
+
+  .result-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #444444;
+  }
+
+  .result-quote {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #1A1A1A;
+    border-left: 3px solid var(--accent-green);
+    padding-left: 16px;
+    margin-top: 20px;
+  }
+
+  /* Destiny card */
+  .destiny-card {
+    background: var(--bg2);
+    border: 1px solid var(--gray3);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .destiny-emoji {
+    font-size: 32px;
+    flex-shrink: 0;
+  }
+
+  .destiny-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .destiny-desc {
+    font-size: 13px;
+    color: var(--gray1);
+    line-height: 1.5;
+  }
+
+  /* Partner */
+  .partner-card {
+    background: var(--bg2);
+    border: 1px solid var(--gray3);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .partner-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(0,200,83,0.1);
+    border: 1px solid rgba(0,200,83,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .partner-name {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .partner-label {
+    font-size: 12px;
+    color: var(--gray1);
+    margin-top: 2px;
+  }
+
+  /* Similar stars */
+  .similar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .similar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .similar-name {
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .similar-bar-wrap {
+    flex: 2;
+    height: 4px;
+    background: var(--gray3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .similar-bar-fill {
+    height: 100%;
+    background: var(--accent-green);
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+
+  .similar-pct {
+    font-family: var(--font-en);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray1);
+    width: 36px;
+    text-align: right;
+  }
+
+  /* Share & retry */
+  .result-actions {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: var(--bg);
+    border-top: 1px solid var(--gray3);
+    padding: 16px 24px;
+    display: flex;
+    gap: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Fix: result-actions centering */
+  #screen-result .result-actions {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .btn-share {
+    flex: 1;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    border: none;
+    font-family: var(--font-cn);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-share:hover { filter: brightness(1.1); }
+
+  .btn-retry {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid var(--gray3);
+    color: var(--gray1);
+    font-family: var(--font-cn);
+    font-size: 15px;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-retry:hover { border-color: var(--gray1); color: var(--white); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.4s ease forwards;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  /* ===== MOBILE FIRST ===== */
+  @media (max-width: 600px) {
+
+    /* Landing */
+    #screen-landing { padding: 32px 20px; }
+    .landing-eyebrow { font-size: 10px; margin-bottom: 14px; }
+    .landing-title { font-size: 40px; line-height: 1.0; margin-bottom: 6px; }
+    .landing-subtitle { font-size: 14px; margin-bottom: 28px; }
+
+    .star-parade-item { width: 64px; height: 64px; margin-left: -12px; }
+    .star-parade { margin-bottom: 32px; }
+
+    .btn-start { font-size: 16px; padding: 15px 32px; }
+    .landing-meta { font-size: 12px; margin-top: 14px; }
+
+    /* Quiz header */
+    .quiz-header { padding: 12px 16px; }
+    .progress-label { font-size: 11px; }
+    .progress-num { font-size: 12px; }
+
+    /* Quiz body */
+    .quiz-body { padding: 24px 16px 20px; }
+    .question-text { font-size: 18px; margin-bottom: 24px; }
+    .options-list { gap: 10px; }
+    .option-btn { padding: 15px 16px; font-size: 14px; gap: 12px; }
+    .option-key { width: 26px; height: 26px; font-size: 11px; }
+
+    /* Quiz nav */
+    .quiz-nav { padding: 0 16px 24px; gap: 10px; }
+    .btn-prev { font-size: 14px; padding: 13px 16px; }
+    .btn-next { font-size: 15px; padding: 13px; }
+
+    /* Ad screen */
+    .ad-title { font-size: 18px; }
+    .ad-sub { font-size: 13px; }
+    .ad-placeholder { height: 200px !important; }
+
+    /* Result hero */
+    .result-hero { padding: 32px 16px 0; }
+    .result-pct-display { font-size: 80px; }
+    .result-star-name { font-size: 28px; }
+    .result-img-side { width: 100%; height: 220px; }
+    .result-star-img { height: 220px; max-width: 240px; }
+
+    /* Result body */
+    .result-body { padding: 24px 16px 80px; }
+    .result-section { margin-bottom: 24px; }
+    .result-desc { font-size: 15px; }
+    .result-quote { font-size: 17px; }
+    .destiny-card { padding: 16px; gap: 12px; }
+    .destiny-emoji { font-size: 28px; }
+    .destiny-title { font-size: 14px; }
+    .destiny-desc { font-size: 12px; }
+    .partner-card { padding: 14px 16px; }
+    .partner-name { font-size: 16px; }
+
+    /* Result actions */
+    .result-actions {
+      padding: 12px 16px;
+      left: 0 !important;
+      transform: none !important;
+    }
+    .btn-share { font-size: 14px; padding: 13px; }
+    .btn-retry { font-size: 14px; padding: 13px 16px; }
+
+    /* Similar list */
+    .similar-name { font-size: 13px; }
+    .similar-pct { font-size: 12px; }
+  }
+
+  /* 极小屏幕 iPhone SE等 */
+  @media (max-width: 375px) {
+    .landing-title { font-size: 34px; }
+    .result-pct-display { font-size: 68px; }
+    .result-star-name { font-size: 24px; }
+    .result-img-side { width: 100%; height: 190px; }
+    .result-star-img { height: 190px; max-width: 200px; }
+    .option-btn { padding: 13px 14px; font-size: 13px; }
+  }
+
+  /* ===== LANG SWITCH ===== */
+  .lang-switch {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 999;
+    display: flex;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid var(--gray3);
+    border-radius: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .lang-btn {
+    padding: 6px 14px;
+    font-family: var(--font-en);
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--gray1);
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+
+  .lang-btn.active {
+    background: #1A1A1A;
+    color: #FFFFFF;
+    border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LANG SWITCH ===== -->
+<div class="lang-switch">
+  <button class="lang-btn active" onclick="setLang('zh')" id="btn-zh">中文</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
+</div>
+
+
+<!-- ===== LANDING ===== -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-bg-grid"></div>
+  <div class="landing-glow"></div>
+  <div class="landing-content fade-in-up">
+    <div class="landing-eyebrow">2026 World Cup · 人格测试</div>
+    <h1 class="landing-title">
+      <span id="landing-title-main">你是哪位</span>
+      <span class="highlight" id="landing-title-highlight">球星？</span>
+    </h1>
+    <p class="landing-subtitle">30道题，测出你最接近哪位球星<br>看看你的世界杯命运</p>
+
+    <div class="star-parade">
+      <div class="star-parade-item">
+        <img src="images/stars/00_Messi.jpg" alt="梅西">
+      </div>
+      <div class="star-parade-item">
+        <img src="images/stars/01_Ronaldo.jpg" alt="C罗">
+      </div>
+      <div class="star-parade-item">
+        <img src="images/stars/02_Mbappe.jpg" alt="姆巴佩">
+      </div>
+      <div class="star-parade-item">
+        <img src="images/stars/03_Haaland.jpg" alt="哈兰德">
+      </div>
+      <div class="star-parade-item" style="background:var(--bg3);display:flex;align-items:center;justify-content:center;font-family:var(--font-en);font-size:13px;font-weight:700;color:var(--accent);">
+        +26
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">
+      开始测试 →
+    </button>
+    <div class="landing-meta">30题 · 约3分钟</div>
+  </div>
+</div>
+
+<!-- ===== QUIZ ===== -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-header">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="progress-meta">
+      <span class="progress-label" id="progress-group-label">第一组：压力下的你</span>
+      <span class="progress-num" id="progress-num">1 / 30</span>
+    </div>
+  </div>
+
+  <div class="quiz-body">
+    <div class="question-text" id="question-text"></div>
+    <div class="options-list" id="options-list"></div>
+  </div>
+
+  <div class="quiz-nav">
+    <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">← 上一题</button>
+    <button class="btn-next" id="btn-next" onclick="nextQuestion()">下一题 →</button>
+  </div>
+</div>
+
+<!-- ===== AD ===== -->
+<div id="screen-ad" class="screen">
+  <div class="ad-placeholder-fullscreen">
+    <div class="ad-analyzing" id="ad-analyzing-text">ANALYZING YOUR PERSONALITY</div>
+    <div class="ad-dots">
+      <div class="ad-dot"></div>
+      <div class="ad-dot"></div>
+      <div class="ad-dot"></div>
+    </div>
+    <div class="ad-title" id="ad-main-title">正在匹配你的球星…</div>
+    <div class="ad-sub" id="ad-sub-text">根据你的30个选择，生成专属分析</div>
+    <div class="ad-inner-box">AD</div>
+    <div class="ad-timer"><span id="ad-countdown-label">结果将在</span> <span id="ad-countdown">5</span> <span id="ad-countdown-suffix">秒后揭晓</span></div>
+  </div>
+</div>
+
+<!-- ===== RESULT ===== -->
+<div id="screen-result" class="screen">
+  <div class="result-hero">
+    <div class="result-hero-bg"></div>
+    <div class="result-hero-inner">
+      <div class="result-img-side">
+        <img class="result-star-img" id="result-img" src="" alt="">
+      </div>
+      <div class="result-text-side">
+        <div class="result-eyebrow">你最像</div>
+        <div class="result-pct-display" id="result-pct">87%</div>
+        <div class="result-pct-label">相似度</div>
+        <div class="result-star-name" id="result-name">梅西</div>
+        <div class="result-star-type" id="result-type">天才型·沉默封神</div>
+        <div class="result-star-country" id="result-country">阿根廷</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-body">
+
+    <div class="result-section">
+      <div class="result-section-title">人格描述</div>
+      <div class="result-desc" id="result-desc1"></div>
+      <div class="result-quote" id="result-quote"></div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">世界杯命运</div>
+      <div class="destiny-card" id="destiny-card">
+        <div class="destiny-emoji" id="destiny-emoji">🏆</div>
+        <div>
+          <div class="destiny-title" id="destiny-title"></div>
+          <div class="destiny-desc" id="destiny-desc"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-section" id="partner-section">
+      <div class="result-section-title">最佳队友</div>
+      <div class="partner-card">
+        <div class="partner-icon">🤝</div>
+        <div>
+          <div class="partner-name" id="partner-name"></div>
+          <div class="partner-label">你们在场上天作之合</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">相似球星排行</div>
+      <div class="similar-list" id="similar-list"></div>
+    </div>
+
+    <div style="height: 80px;"></div>
+  </div>
+
+  <div class="result-actions">
+    <button class="btn-share" onclick="shareResult()">📤 分享结果</button>
+    <button class="btn-retry" onclick="restartQuiz()">重测</button>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+const questions = [
+  { id:'Q1', text:'你做了一件很重要的事，结果失败了，你第一反应是？', options:[{key:'A',text:'复盘一遍，找到每一个失误点'},{key:'B',text:'沉默好几小时，然后告诉自己下次一定赢'},{key:'C',text:'跟人说一声没事，然后一个人消化'},{key:'D',text:'觉得自己其实已经尽力了，释然'}] },
+  { id:'Q2', text:'有人当众质疑你的能力，你会？', options:[{key:'A',text:'不说话，用结果回击'},{key:'B',text:'当场反驳，不让步'},{key:'C',text:'笑着说明你的见解，但心里记住了'},{key:'D',text:'真的开始怀疑自己一秒，然后重新振作'}] },
+  { id:'Q3', text:'团队快撑不住了，你会？', options:[{key:'A',text:'站出来扛，哪怕你也很累'},{key:'B',text:'默默多做一点，不声张'},{key:'C',text:'找到关键问题，精准解决'},{key:'D',text:'先稳住情绪，再想办法'}] },
+  { id:'Q4', text:'连续失败三次，你的状态是？', options:[{key:'A',text:'越输越想赢，停不下来'},{key:'B',text:'需要独处一晚，第二天重新开始'},{key:'C',text:'找人聊聊，聊完就好了'},{key:'D',text:'换个思路，失败说明方向要调整'}] },
+  { id:'Q5', text:'有人比你更努力，但你比他有天赋，你怎么看？', options:[{key:'A',text:'天赋是起点，努力才是终点'},{key:'B',text:'天赋不用白不用，先跑在前面再说'},{key:'C',text:'有点焦虑，但不会承认'},{key:'D',text:'觉得两者都重要，缺一不可'}] },
+  { id:'Q6', text:'朋友聚会，你通常是？', options:[{key:'A',text:'那个让所有人都玩得开心的人'},{key:'B',text:'话不多，但说一句算一句'},{key:'C',text:'观察大家，偶尔说一句让全场安静的话'},{key:'D',text:'享受热闹，但也喜欢提前离场'}] },
+  { id:'Q7', text:'你和一个人关系变淡了，你会？', options:[{key:'A',text:'主动找对方，关系重要'},{key:'B',text:'顺其自然，缘分到了就到了'},{key:'C',text:'察觉到了但假装没察觉'},{key:'D',text:'分析原因，觉得大概是自己哪里不够好'}] },
+  { id:'Q8', text:'别人在犯一个你早就看出来的错误，你会？', options:[{key:'A',text:'直接说，不说难受'},{key:'B',text:'等他问你再说'},{key:'C',text:'旁敲侧击提醒一下'},{key:'D',text:'让他自己发现，经历才是成长'}] },
+  { id:'Q9', text:'有人夸你，你的反应是？', options:[{key:'A',text:'开心，但会说还不够好'},{key:'B',text:'谢谢，然后继续做自己的事'},{key:'C',text:'有点不好意思，但其实很受用'},{key:'D',text:'认真问对方哪里好，想知道具体是什么'}] },
+  { id:'Q10', text:'你理想中的一天是？', options:[{key:'A',text:'高效完成所有事，晚上有成就感'},{key:'B',text:'没有计划，走到哪算哪'},{key:'C',text:'和重要的人在一起，做什么都行'},{key:'D',text:'一个人安静待着，充电'}] },
+  { id:'Q11', text:'你没能站上一个舞台，最接近的原因是？', options:[{key:'A',text:'有人抢先做了决定，我甚至没被问过'},{key:'B',text:'我所在的团队没能带我到那里'},{key:'C',text:'那个舞台我站过了，只是时间到了'},{key:'D',text:'我自己选择了另一条路'}] },
+  { id:'Q12', text:'你有一个巨大的天赋，但命运一直在阻止你发挥，你是？', options:[{key:'A',text:'继续等，机会总会来'},{key:'B',text:'换一条路，天赋可以在别处发光'},{key:'C',text:'愤怒，但愤怒是动力'},{key:'D',text:'接受，有些事不是努力能改变的'}] },
+  { id:'Q13', text:'如果你只能选一个，你要？', options:[{key:'A',text:'被所有人记住，但孤独一生'},{key:'B',text:'被少数人真正理解，平凡一生'},{key:'C',text:'高光时刻短暂，但那一刻是永恒'},{key:'D',text:'稳定发挥，没有巅峰但也没有低谷'}] },
+  { id:'Q14', text:'比赛最后一分钟，你们落后一球，你上场了，你会？', options:[{key:'A',text:'我就是为这种时刻而生的'},{key:'B',text:'冷静，机会总比时间多'},{key:'C',text:'有点腿软，但上了就全力以赴'},{key:'D',text:'把球传给状态最好的队友'}] },
+  { id:'Q15', text:'你的人生如果是一场比赛，现在是第几分钟？', options:[{key:'A',text:'上半场，热身刚结束'},{key:'B',text:'下半场开始，刚找到节奏'},{key:'C',text:'伤停补时，最关键的时候'},{key:'D',text:'哨声吹了，但我还想再踢一会儿'}] },
+  { id:'Q16', text:'你全力帮助了一个人，但他把功劳归到别人身上，你会？', options:[{key:'A',text:'当场说清楚，这件事是我做的'},{key:'B',text:'不说，但以后不会再帮他'},{key:'C',text:'无所谓，我知道自己做了什么就够了'},{key:'D',text:'有点难受，但选择原谅'}] },
+  { id:'Q17', text:'你发现团队里有人在偷懒，你会？', options:[{key:'A',text:'直接指出来，大家都看着呢'},{key:'B',text:'私下找他谈，给他台阶下'},{key:'C',text:'自己多做一点，弥补他的空缺'},{key:'D',text:'跟队长说，这是他该管的事'}] },
+  { id:'Q18', text:'一个比你弱的人挑战你，你会？', options:[{key:'A',text:'认真对待，对手不分强弱'},{key:'B',text:'点到为止，没必要碾压'},{key:'C',text:'有点懒得理，但也不会无视'},{key:'D',text:'帮他找到自己真正的位置'}] },
+  { id:'Q19', text:'你最好的朋友和你意见完全相反，你会？', options:[{key:'A',text:'坚持自己，友情归友情'},{key:'B',text:'认真听他的，也许他是对的'},{key:'C',text:'找一个中间地带，谁都不完全妥协'},{key:'D',text:'表面同意，私下还是做自己的'}] },
+  { id:'Q20', text:'有人一直模仿你，你怎么看？', options:[{key:'A',text:'模仿是最高级的认可，我接受'},{key:'B',text:'有点烦，但懒得计较'},{key:'C',text:'努力和他拉开差距'},{key:'D',text:'主动教他，让他超越我'}] },
+  { id:'Q21', text:'你带着一群人，但结果不理想，你会？', options:[{key:'A',text:'责任在我，我来扛'},{key:'B',text:'复盘每个人的问题，一起改'},{key:'C',text:'先照顾大家的情绪，再谈改进'},{key:'D',text:'沉默，用下一次的结果说话'}] },
+  { id:'Q22', text:'有人说你变了，你怎么回应？', options:[{key:'A',text:'我本来就是这样，你不了解我'},{key:'B',text:'也许吧，成长就是在变'},{key:'C',text:'认真想了一下，觉得他说的有点对'},{key:'D',text:'笑了笑，没有回答'}] },
+  { id:'Q23', text:'你觉得自己最大的天赋是什么？', options:[{key:'A',text:'在最难的时候还能保持清醒'},{key:'B',text:'让周围的人变得更好'},{key:'C',text:'永远比别人多想一步'},{key:'D',text:'不知道，但我知道我还没发挥完'}] },
+  { id:'Q24', text:'你人生最遗憾的事，最可能是？', options:[{key:'A',text:'某个时刻没有勇敢一点'},{key:'B',text:'某段关系没有好好珍惜'},{key:'C',text:'某个舞台，我本可以站上去'},{key:'D',text:'还没想好，因为还没结束'}] },
+  { id:'Q25', text:'深夜睡不着，你在想什么？', options:[{key:'A',text:'今天哪里可以做得更好'},{key:'B',text:'那些没说出口的话'},{key:'C',text:'如果当时选了另一条路'},{key:'D',text:'什么都不想，就是睡不着'}] },
+  { id:'Q26', text:'你觉得别人眼中的你，和真实的你？', options:[{key:'A',text:'差很多，没人真正懂我'},{key:'B',text:'差一点，但无所谓'},{key:'C',text:'差不多，我活得比较透明'},{key:'D',text:'不知道，我也不确定真实的我是什么样'}] },
+  { id:'Q27', text:'如果有人为你写传记，最后的一句话是？', options:[{key:'A',text:'他本该在那里，但那里没有他的名字'},{key:'B',text:'他一个人承担起了整座遗迹，但遗迹没能扶起他'},{key:'C',text:'他离开了赛场，但赛场从未离开他'},{key:'D',text:'他用结果让所有人甘心被他魅惑'}] },
+  { id:'Q28', text:'你觉得自己最被低估的地方是？', options:[{key:'A',text:'我有多拼，没人看见'},{key:'B',text:'我对别人有多重要，他们不知道'},{key:'C',text:'我其实比看起来聪明得多'},{key:'D',text:'没有，我觉得别人对我的评价挺准的'}] },
+  { id:'Q29', text:'有一天你消失了，你希望别人记住你什么？', options:[{key:'A',text:'他从不放弃'},{key:'B',text:'他让我变得更好'},{key:'C',text:'他和别人不一样'},{key:'D',text:'他来过，真的来过'}] },
+  { id:'Q30', text:'最后一题——你觉得自己的故事，现在写到哪里了？', options:[{key:'A',text:'序章刚结束，正文还没开始'},{key:'B',text:'高潮部分，每天都很燃'},{key:'C',text:'中途遇到了瓶颈，但故事还在继续'},{key:'D',text:'有些章节没写完就翻篇了，有点可惜'}] },
+]
+
+const starNames = ['梅西','C罗','姆巴佩','哈兰德','贝林厄姆','亚马尔','维尼修斯','内马尔','凯恩','莫德里奇','久保建英','孙兴慜','萨卡','穆西亚拉','维尔茨','恩佐','哈基米','范戴克','萨拉赫','佩德里','诺伊尔','卢卡库','沃齐尼亚','B费','阿尔瓦雷斯','登贝莱','奥利塞','帕尔默','克瓦拉茨赫利亚','苏亚雷斯']
+
+const weights = {
+  Q1A:[[14,2],[9,2],[15,1]],Q1B:[[1,2],[0,1],[10,1]],Q1C:[[0,2],[11,1],[8,1]],Q1D:[[3,2],[21,1],[29,1]],
+  Q2A:[[0,2],[16,1],[10,1]],Q2B:[[1,2],[23,2],[4,1]],Q2C:[[2,2],[25,1],[14,1]],Q2D:[[8,1],[11,1],[27,2],[28,1]],
+  Q3A:[[4,2],[1,1],[11,1]],Q3B:[[15,2],[0,1],[8,1]],Q3C:[[2,2],[14,1],[20,1]],Q3D:[[19,1],[9,1],[12,1]],
+  Q4A:[[1,2],[4,1],[16,1]],Q4B:[[0,2],[10,1],[8,1]],Q4C:[[12,1],[21,1],[7,1]],Q4D:[[9,2],[2,1],[24,1]],
+  Q5A:[[15,2],[1,1],[11,1]],Q5B:[[5,2],[3,1],[13,1]],Q5C:[[23,1],[6,1],[27,2]],Q5D:[[19,1],[17,1],[12,1]],
+  Q6A:[[12,2],[7,1],[21,1]],Q6B:[[0,2],[17,1],[20,1]],Q6C:[[2,2],[9,1],[14,1]],Q6D:[[3,2],[25,1],[10,1]],
+  Q7A:[[11,2],[4,1],[12,1]],Q7B:[[3,2],[25,1],[29,1]],Q7C:[[0,1],[2,1],[28,1]],Q7D:[[8,2],[27,2],[28,1]],
+  Q8A:[[23,2],[1,1],[4,1]],Q8B:[[0,2],[17,1],[20,1]],Q8C:[[9,1],[19,1],[24,1]],Q8D:[[2,1],[25,1],[3,1]],
+  Q9A:[[1,2],[4,1]],Q9B:[[0,2],[20,1],[17,1]],Q9C:[[10,1],[8,1],[11,1]],Q9D:[[15,1],[14,1],[19,1]],
+  Q10A:[[1,2],[14,1],[15,1]],Q10B:[[3,2],[7,1],[25,1]],Q10C:[[12,1],[11,1],[21,1]],Q10D:[[0,2],[9,1],[10,1]],
+  Q11A:[[27,5],[8,1]],Q11B:[[28,5],[10,1]],Q11C:[[29,5],[9,1]],Q11D:[[16,1],[18,1],[26,1]],
+  Q12A:[[22,2],[9,1],[8,1]],Q12B:[[16,1],[18,1],[24,1]],Q12C:[[27,5],[6,1],[23,1]],Q12D:[[28,5],[29,2]],
+  Q13A:[[1,2],[4,1],[0,1]],Q13B:[[9,2],[10,1],[20,1]],Q13C:[[26,2],[27,2],[16,1]],Q13D:[[17,2],[15,1],[12,1]],
+  Q14A:[[1,2],[4,2],[3,1]],Q14B:[[2,2],[14,1],[0,1]],Q14C:[[8,1],[11,1],[12,1]],Q14D:[[19,2],[15,1],[9,1]],
+  Q15A:[[5,2],[3,1],[4,1]],Q15B:[[18,2],[16,1],[26,1]],Q15C:[[1,2],[9,1],[22,1]],Q15D:[[29,5]],
+  Q16A:[[23,2],[4,1],[6,1]],Q16B:[[2,2],[0,1]],Q16C:[[15,2],[17,1],[20,1]],Q16D:[[12,1],[11,1],[8,1]],
+  Q17A:[[1,2],[4,1],[23,1]],Q17B:[[11,2],[19,1],[9,1]],Q17C:[[15,2],[8,1],[0,1]],Q17D:[[24,2],[17,1],[20,1]],
+  Q18A:[[1,2],[0,1],[4,1]],Q18B:[[9,2],[17,1],[19,1]],Q18C:[[3,2],[25,1],[2,1]],Q18D:[[11,1],[12,1],[15,1]],
+  Q19A:[[1,2],[23,1],[14,1]],Q19B:[[19,2],[9,1],[0,1]],Q19C:[[12,1],[24,1],[17,1]],Q19D:[[2,2],[25,1],[7,1]],
+  Q20A:[[0,1],[1,1],[7,1]],Q20B:[[3,2],[25,1],[21,1]],Q20C:[[1,2],[6,1],[16,1]],Q20D:[[11,2],[19,1],[9,1]],
+  Q21A:[[4,2],[1,1],[11,1]],Q21B:[[15,2],[14,1],[9,1]],Q21C:[[12,2],[19,1],[24,1]],Q21D:[[0,2],[17,1],[20,1]],
+  Q22A:[[6,2],[23,1],[16,1]],Q22B:[[4,1],[5,1],[18,1]],Q22C:[[8,1],[11,1],[10,1]],Q22D:[[0,2],[2,1],[25,1]],
+  Q23A:[[2,2],[14,1],[20,1]],Q23B:[[11,2],[15,1],[19,1]],Q23C:[[9,2],[14,1],[17,1]],Q23D:[[5,2],[13,1],[26,1]],
+  Q24A:[[8,2],[11,1],[22,1]],Q24B:[[7,1],[21,1],[29,1]],Q24C:[[27,5],[28,2],[26,1]],Q24D:[[5,2],[4,1],[3,1]],
+  Q25A:[[1,2],[14,1],[15,1]],Q25B:[[0,1],[11,1],[8,1]],Q25C:[[28,5],[22,1],[9,1]],Q25D:[[3,2],[21,1],[25,1]],
+  Q26A:[[28,5],[10,1],[7,1]],Q26B:[[3,2],[25,1],[21,1]],Q26C:[[12,2],[1,1],[4,1]],Q26D:[[13,2],[5,1],[19,1]],
+  Q27A:[[27,5],[22,1]],Q27B:[[28,5],[11,1]],Q27C:[[29,5],[8,1]],Q27D:[[1,2],[4,1],[16,1]],
+  Q28A:[[27,5],[15,1],[8,1]],Q28B:[[17,2],[20,1],[19,1]],Q28C:[[2,1],[14,1],[24,1]],Q28D:[[1,2],[4,1],[3,1]],
+  Q29A:[[1,2],[8,1],[15,1]],Q29B:[[11,2],[19,1],[12,1]],Q29C:[[13,2],[26,1],[5,1]],Q29D:[[29,5],[9,1]],
+  Q30A:[[5,2],[3,1],[4,1]],Q30B:[[1,2],[4,1],[6,1]],Q30C:[[18,2],[16,1],[22,1]],Q30D:[[29,5],[28,2],[27,1]],
+}
+
+const stars = {
+  '梅西':{ image:'00_Messi', country:'阿根廷', type:'天才型·沉默封神', partner:'恩佐', destiny:'冠军', desc1:'你是那种房间里最安静，但离开后所有人都觉得少了点什么的人', quote:'天才不解释，时间会说话' },
+  'C罗':{ image:'01_Ronaldo', country:'葡萄牙', type:'意志型·永不服输', partner:'B费', destiny:'亚军', desc1:'你是那种别人说差不多了，你说还不够的人', quote:'赢，是你唯一接受的结局' },
+  '姆巴佩':{ image:'02_Mbappe', country:'法国', type:'野心型·冷静致命', partner:'奥利塞', destiny:'冠军', desc1:'你是那种笑着把你卖了你还觉得他挺好的人', quote:'城府不是冷漠，是延迟满足的另一种说法' },
+  '哈兰德':{ image:'03_Haaland', country:'挪威', type:'纯粹型·只管进球', partner:'厄德高', destiny:'四强', desc1:'你是那种别人在焦虑人生意义，你在想今天吃什么的人', quote:'世界很复杂，但进球很简单' },
+  '贝林厄姆':{ image:'04_Bellingham', country:'英格兰', type:'领袖型·天生队长', partner:'凯恩', destiny:'亚军', desc1:'你是那种二十岁就活得像四十岁的人，但眼神里还有火', quote:'生来就是要发光的，不需要理由' },
+  '亚马尔':{ image:'05_Yamal', country:'西班牙', type:'少年天才型·无所畏惧', partner:'佩德里', destiny:'冠军', desc1:'你是那种让所有人不知道该用什么标准评价你的人', quote:'无所畏惧，不是因为不知道危险，是因为根本没时间怕' },
+  '维尼修斯':{ image:'06_Vinicius', country:'巴西', type:'激情型·争议爆发', partner:'内马尔', destiny:'四强', desc1:'你是那种情绪来了挡都挡不住，但情绪过了比谁都清醒的人', quote:'燃烧过的人，才知道什么叫真实' },
+  '内马尔':{ image:'07_Neymar', country:'巴西', type:'浪子型·才华与争议并存', partner:'维尼修斯', destiny:'八强', desc1:'你是那种明明可以靠才华，偏偏还要靠魅力的人', quote:'天赋是礼物，但礼物也可以用来享受' },
+  '凯恩':{ image:'08_Kane', country:'英格兰', type:'苦行型·默默扛旗', partner:'赖斯', destiny:'八强', desc1:'你是那种默默做了一百件事，被记住的只有那一次没做到的人', quote:'不是所有的坚持都有结局，但坚持本身就是答案' },
+  '莫德里奇':{ image:'09_Modric', country:'克罗地亚', type:'智慧型·用脑踢球', partner:'佩里西奇', destiny:'四强', desc1:'你是那种走进房间没人注意，但走出去所有人都想问那个人是谁的人', quote:'最高级的存在感，是让人感觉不到你在用力' },
+  '久保建英':{ image:'10_Kubo', country:'日本', type:'坚韧型·低调突破', partner:'镰田大地', destiny:'十六强', desc1:'你是那种被环境压着长大，但没有被压弯的人', quote:'压力是养分，不是障碍' },
+  '孙兴慜':{ image:'11_Son', country:'韩国', type:'责任型·扛旗不计得失', partner:'黄喜灿', destiny:'十六强', desc1:'你是那种把所有人的期待都扛在肩上，还能笑着跑完全场的人', quote:'有人为自己踢球，有人为所有人踢球，你是后者' },
+  '萨卡':{ image:'12_Saka', country:'英格兰', type:'阳光型·稳定正能量', partner:'凯恩', destiny:'亚军', desc1:'你是那种让人觉得跟他在一起好像什么都没那么难的人', quote:'从容，是最难学会的技能' },
+  '穆西亚拉':{ image:'13_Musiala', country:'德国', type:'灵感型·飘忽即兴', partner:'维尔茨', destiny:'四强', desc1:'你是那种下一步永远让人猜不到，连你自己有时候也不知道的人', quote:'灵感不能被安排，只能被等待' },
+  '维尔茨':{ image:'14_Wirtz', country:'德国', type:'精密型·全局理性', partner:'穆西亚拉', destiny:'四强', desc1:'你是那种接球之前已经想好三步之后的人', quote:'想清楚了再走，每一步都算数' },
+  '恩佐':{ image:'15_Enzo', country:'阿根廷', type:'拼命型·跑不死', partner:'麦卡利斯特', destiny:'冠军', desc1:'你是那种没人注意但少了你什么都转不起来的人', quote:'拼命不是表演，是习惯' },
+  '哈基米':{ image:'16_Hakimi', country:'摩洛哥', type:'黑马型·用实力打脸', partner:'马扎拉维', destiny:'八强', desc1:'你是那种被所有人低估，然后用速度甩开所有质疑的人', quote:'被低估是礼物，因为没人会防着你' },
+  '范戴克':{ image:'17_VanDijk', country:'荷兰', type:'稳固型·默默撑起全局', partner:'弗伦基·德容', destiny:'八强', desc1:'你是那种没有你大家都慌，有你大家都忘了你在的人', quote:'最好的存在，是让混乱无处落脚' },
+  '萨拉赫':{ image:'18_Salah', country:'埃及', type:'逆袭型·被低估后封神', partner:'马尔穆什', destiny:'十六强', desc1:'你是那种被否定了一百次，第一百零一次还是站起来的人', quote:'逆袭不是运气，是积累到某一刻的爆发' },
+  '佩德里':{ image:'19_Pedri', country:'西班牙', type:'艺术型·传控美学', partner:'罗德里', destiny:'冠军', desc1:'你是那种把复杂的事变简单，把简单的事变成艺术的人', quote:'足球是语言，你说的是诗' },
+  '诺伊尔':{ image:'20_Neuer', country:'德国', type:'守护型·最后防线', partner:'吕迪格', destiny:'四强', desc1:'你是那种最后一道防线，但从来不像最后一道防线的人', quote:'守住的不只是球门，是所有人的信心' },
+  '卢卡库':{ image:'21_Lukaku', country:'比利时', type:'快乐主义型', partner:'德布劳内', destiny:'十六强', desc1:'你是那种全世界都在焦虑，你还在想今晚吃什么的人', quote:'质疑我的人请闭嘴，欣赏我的人请跟随' },
+  '沃齐尼亚':{ image:'22_Vozinha', country:'佛得角', type:'大器晚成型', partner:'瑞安·门德斯', destiny:'十六强', desc1:'你是那种所有人都说太晚了，你说还没到时候的人', quote:'时机从来不嫌晚，只要你还在' },
+  'B费':{ image:'23_Fernandes', country:'葡萄牙', type:'话题型·争议中前行', partner:'C罗', destiny:'亚军', desc1:'你是那种所有人都有意见，但没有你又不行的人', quote:'被议论，是因为值得被议论' },
+  '阿尔瓦雷斯':{ image:'24_Alvarez', country:'阿根廷', type:'选择大于努力型', partner:'梅西', destiny:'冠军', desc1:'你是那种站对了队伍，然后用实力证明自己配得上的人', quote:'选择对了方向，努力才不会白费' },
+  '登贝莱':{ image:'25_Dembele', country:'法国', type:'司马懿型·众神之战我躺平', partner:'姆巴佩', destiny:'冠军', desc1:'你是那种所有人都觉得你废了，然后你拿了金球奖的人', quote:'笑到最后的人，从不解释自己在做什么' },
+  '奥利塞':{ image:'26_Olise', country:'法国', type:'爆发型·低调积累一击即中', partner:'姆巴佩', destiny:'四强', desc1:'你是那种平时没人注意，爆发起来让所有人措手不及的人', quote:'最好的惊喜，是从不提前剧透' },
+  '帕尔默':{ image:'27_Palmer', country:'英格兰', type:'被埋没型·才华等待公平机会', partner:null, destiny:'无缘参赛', desc1:'你知道自己本可以在那里，但那里没有你', quote:'缺席的人，有时候比在场的人更让人记得', destinyDesc:'你本该在那里，但有人替你做了决定。才华从来不会消失，只是有时候需要等一个公平的机会。' },
+  '克瓦拉茨赫利亚':{ image:'28_Kvaratskhelia', country:'格鲁吉亚', type:'遗珠型·国家队拖累了他', partner:null, destiny:'无缘参赛', desc1:'你隔着栅栏看着那片绿茵场，风把头发吹乱，你没有动', quote:'有些人生来就是要用来惋惜的，但惋惜里有一种特别的美', destinyDesc:'你站在门外，看着别人踏上那片草地。不是你不够好，是这个世界还没准备好接住你的好。' },
+  '苏亚雷斯':{ image:'29_Suarez', country:'乌拉圭', type:'落幕型·真正热爱过的人', partner:null, destiny:'无缘参赛', desc1:'你坐在看台上，手里拿着一杯饮料，嘴角带着一点说不清楚的笑', quote:'真正热爱过的人，离开之后还是会回头看一眼', destinyDesc:'你的世界杯在看台上继续。有些人用脚踢球，有些人用心踢球，你是后者，所以永远不会真正离开。' },
+}
+
+const destinyLevels = {
+  '冠军':   { emoji:'🏆', title:'你就是那个举起奖杯的人', desc:'不是运气，是你从第一天就准备好了' },
+  '亚军':   { emoji:'🔥', title:'你走到了最后一步，但最后一步没迈过去', desc:'这不是失败，这是离完美最近的距离' },
+  '四强':   { emoji:'⚡', title:'你证明了自己，但故事在最精彩的地方停了', desc:'有人说四强已经很好了，但你知道自己本可以更远' },
+  '八强':   { emoji:'⚔️', title:'你打败了大多数人，但那扇门还是没开', desc:'不遗憾，但如果再来一次，你会不一样' },
+  '十六强': { emoji:'🫡', title:'你进来了，但还没来得及让世界记住你', desc:'没关系，故事才刚开始' },
+  '小组赛出局': { emoji:'😢', title:'你来了，你拼了，但这次不是你的时候', desc:'有些舞台需要等，而你，还有时间' },
+  '无缘参赛': { emoji:'⭐', title:'缺席也是一种存在', desc:'你本该在那里' },
+}
+
+const groupLabels = ['第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知']
+
+// ===== STATE =====
+let currentQ = 0
+let answers = {}
+let adTimer = null
+
+// ===== SCORING =====
+function calcMaxScores() {
+  const max = new Array(30).fill(0)
+  Object.keys(weights).forEach(key => {
+    weights[key].forEach(([idx, val]) => { if (val < 5) max[idx] += val })
+  })
+  return max
+}
+
+function calcResult(ans) {
+  const maxScores = calcMaxScores()
+  const rawScores = new Array(30).fill(0)
+  const regretBonus = new Array(30).fill(0)
+  Object.keys(ans).forEach(qid => {
+    const key = qid + ans[qid]
+    if (weights[key]) {
+      weights[key].forEach(([idx, val]) => {
+        rawScores[idx] += val
+        if (val === 5) regretBonus[idx] += val
+      })
+    }
+  })
+  const ranked = starNames.map((name, i) => {
+    const normalScore = rawScores[i] - regretBonus[i]
+    const maxNormal = maxScores[i]
+    const basePct = maxNormal > 0 ? normalScore / maxNormal : 0
+    const regretBoost = regretBonus[i] > 0 ? Math.min(regretBonus[i] * 0.05, 0.25) : 0
+    const finalPct = Math.min(Math.round((basePct + regretBoost) * 100), 99)
+    return { name, idx: i, pct: finalPct, rawScore: rawScores[i] }
+  }).sort((a, b) => b.pct - a.pct || b.rawScore - a.rawScore)
+  return ranked.slice(0, 3)
+}
+
+// ===== SCREENS =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'))
+  document.getElementById('screen-' + id).classList.add('active')
+  window.scrollTo(0, 0)
+}
+
+// ===== QUIZ =====
+function startQuiz() {
+  currentQ = 0
+  answers = {}
+  renderQuestion()
+  showScreen('quiz')
+}
+
+function renderQuestion() {
+  const q = getQuestions()[currentQ]
+  document.getElementById('question-text').textContent = q.text
+  document.getElementById('progress-group-label').textContent = i18n[currentLang].progressGroups[currentQ]
+  document.getElementById('progress-num').textContent = (currentQ + 1) + ' / 30'
+  document.getElementById('progress-fill').style.width = ((currentQ / 30) * 100) + '%'
+
+  const list = document.getElementById('options-list')
+  list.innerHTML = ''
+  q.options.forEach(opt => {
+    const btn = document.createElement('button')
+    btn.className = 'option-btn' + (answers[q.id] === opt.key ? ' selected' : '')
+    btn.innerHTML = `<span class="option-key">${opt.key}</span><span>${opt.text}</span>`
+    btn.onclick = (e) => selectOption(q.id, opt.key, e.currentTarget)
+    list.appendChild(btn)
+  })
+
+  const t = i18n[currentLang]
+  const nextBtn = document.getElementById('btn-next')
+  const nextLabel = currentQ === 29 ? t.finishBtn : t.nextBtn
+  if (answers[q.id]) {
+    nextBtn.classList.add('enabled')
+    nextBtn.textContent = nextLabel
+  } else {
+    nextBtn.classList.remove('enabled')
+    nextBtn.textContent = nextLabel
+  }
+
+  const prevBtn2 = document.getElementById('btn-prev')
+  prevBtn2.style.display = currentQ === 0 ? 'none' : 'block'
+  prevBtn2.textContent = t.prevBtn
+}
+
+function selectOption(qid, key, el) {
+  const nextBtn = document.getElementById('btn-next')
+  const nextLabel = currentQ === 29 ? i18n[currentLang].finishBtn : i18n[currentLang].nextBtn
+
+  // 先重置所有选项样式
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.classList.remove('selected')
+    btn.querySelector('.option-key').style.background = ''
+    btn.querySelector('.option-key').style.color = ''
+  })
+
+  // 如果点的是已选中的，则取消选择
+  if (answers[qid] === key) {
+    delete answers[qid]
+    nextBtn.classList.remove('enabled')
+    nextBtn.textContent = nextLabel
+    return
+  }
+
+  // 选中新选项
+  answers[qid] = key
+  el.classList.add('selected')
+  el.querySelector('.option-key').style.background = '#1A1A1A'
+  el.querySelector('.option-key').style.color = '#FFFFFF'
+  nextBtn.classList.add('enabled')
+  nextBtn.textContent = nextLabel
+}
+
+function nextQuestion() {
+  if (!answers[questions[currentQ].id]) return
+  if (currentQ === 14) {
+    showAd()
+    return
+  }
+  if (currentQ === 29) {
+    showAdThenResult()
+    return
+  }
+  currentQ++
+  renderQuestion()
+  window.scrollTo(0, 0)
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--
+    renderQuestion()
+    window.scrollTo(0, 0)
+  }
+}
+
+// ===== AD =====
+function showAdThenResult() {
+  showScreen('ad')
+  updateAdText('adTitle2')
+  document.getElementById('ad-countdown').textContent = 5
+  let count = 5
+  const timer = setInterval(() => {
+    count--
+    document.getElementById('ad-countdown').textContent = count
+    if (count <= 0) {
+      clearInterval(timer)
+      showResult()
+    }
+  }, 1000)
+}
+
+function updateAdText(titleKey) {
+  const t = i18n[currentLang]
+  document.getElementById('ad-main-title').textContent = t[titleKey]
+  document.getElementById('ad-sub-text').textContent = t.adSub
+  document.getElementById('ad-countdown-label').textContent = t.adCountdown
+  document.getElementById('ad-countdown-suffix').textContent = t.adCountdown2
+}
+
+function showAd() {
+  showScreen('ad')
+  updateAdText('adTitle')
+  let count = 5
+  document.getElementById('ad-countdown').textContent = count
+  adTimer = setInterval(() => {
+    count--
+    document.getElementById('ad-countdown').textContent = count
+    if (count <= 0) {
+      clearInterval(adTimer)
+      currentQ++
+      renderQuestion()
+      showScreen('quiz')
+    }
+  }, 1000)
+}
+
+// ===== RESULT =====
+function showResult() {
+  const top3 = calcResult(answers)
+  const top = top3[0]
+  const starData = getStarData(top.name)
+
+  document.getElementById('result-pct').textContent = top.pct + '%'
+  document.getElementById('result-name').textContent = currentLang === 'en' ? (starsEn[top.name] ? starsEn[top.name].name : top.name) : top.name
+  document.getElementById('result-type').textContent = starData.type
+  document.getElementById('result-country').textContent = starData.country
+  document.getElementById('result-img').src = 'images/stars/' + starData.image + '.jpg'
+  document.getElementById('result-img').alt = top.name
+  document.getElementById('result-desc1').textContent = starData.desc1
+  document.getElementById('result-quote').textContent = '「' + starData.quote + '」'
+
+  const destiny = getDestinyData(starData.destiny)
+  document.getElementById('destiny-emoji').textContent = destiny.emoji
+  document.getElementById('destiny-title').textContent = destiny.title
+  document.getElementById('destiny-desc').textContent = starData.destinyDesc || destiny.desc
+
+  if (starData.partner) {
+    document.getElementById('partner-section').style.display = 'block'
+    // 找partner对应的英文名
+    let partnerDisplay = starData.partner
+    if (currentLang === 'en' && starsEn[starData.partner]) {
+      partnerDisplay = starsEn[starData.partner].name
+    }
+    document.getElementById('partner-name').textContent = partnerDisplay
+  } else {
+    document.getElementById('partner-section').style.display = 'none'
+  }
+
+  const similarList = document.getElementById('similar-list')
+  similarList.innerHTML = ''
+  top3.forEach((s, i) => {
+    const item = document.createElement('div')
+    item.className = 'similar-item'
+    const displayName = currentLang === 'en' && starsEn[s.name] ? starsEn[s.name].name : s.name
+    item.innerHTML = `
+      <span class="similar-name">${i === 0 ? '⭐ ' : ''}${displayName}</span>
+      <div class="similar-bar-wrap"><div class="similar-bar-fill" style="width:${s.pct}%;opacity:${i===0?1:0.5}"></div></div>
+      <span class="similar-pct">${s.pct}%</span>
+    `
+    similarList.appendChild(item)
+  })
+
+  showScreen('result')
+}
+
+function shareResult() {
+  const top3 = calcResult(answers)
+  const top = top3[0]
+  const text = `我做了2026世界杯人格测试，结果是 ${top.pct}% 的${top.name}！你来测测看？`
+  if (navigator.share) {
+    navigator.share({ title: '2026世界杯球星人格测试', text: text, url: window.location.href })
+  } else {
+    navigator.clipboard.writeText(text + '\n' + window.location.href).then(() => {
+      alert('结果已复制到剪贴板！')
+    })
+  }
+}
+
+function restartQuiz() {
+  currentQ = 0
+  answers = {}
+  if (adTimer) clearInterval(adTimer)
+  showScreen('landing')
+}
+
+// ===== I18N =====
+let currentLang = 'zh'
+
+const i18n = {
+  zh: {
+    landingEyebrow: '2026 World Cup · 人格测试',
+    landingTitle: '你是哪位',
+    landingHighlight: '球星？',
+    landingSubtitle: '30道题，测出你最接近哪位球星<br>看看你的世界杯命运',
+    landingStart: '开始测试 →',
+    landingMeta: '30题 · 约3分钟',
+    progressGroups: ['第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第一组：压力下的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第二组：日常里的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第三组：极端情境的你','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第四组：你和别人的关系','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知','第五组：你对自己的认知'],
+    prevBtn: '← 上一题',
+    nextBtn: '下一题 →',
+    finishBtn: '查看结果 →',
+    adAnalyzing: 'ANALYZING YOUR PERSONALITY',
+    adTitle: '正在匹配你的球星…',
+    adTitle2: '正在生成你的专属结果…',
+    adSub: '根据你的30个选择，生成专属分析',
+    adCountdown: '结果将在',
+    adCountdown2: '秒后揭晓',
+    resultEyebrow: '你最像',
+    resultPctLabel: '相似度',
+    resultSectionDesc: '人格描述',
+    resultSectionDestiny: '世界杯命运',
+    resultSectionPartner: '最佳队友',
+    resultSectionSimilar: '相似球星排行',
+    partnerSub: '你们在场上天作之合',
+    shareBtn: '📤 分享结果',
+    retryBtn: '重测',
+  },
+  en: {
+    landingEyebrow: '2026 World Cup · Personality Test',
+    landingTitle: 'Which Star',
+    landingHighlight: 'Are You?',
+    landingSubtitle: '30 questions to find your football soulmate<br>and reveal your World Cup destiny',
+    landingStart: 'Start Test →',
+    landingMeta: '30 questions · ~3 min',
+    progressGroups: ['Part 1: You Under Pressure','Part 1: You Under Pressure','Part 1: You Under Pressure','Part 1: You Under Pressure','Part 1: You Under Pressure','Part 2: Your Everyday Self','Part 2: Your Everyday Self','Part 2: Your Everyday Self','Part 2: Your Everyday Self','Part 2: Your Everyday Self','Part 3: Extreme Scenarios','Part 3: Extreme Scenarios','Part 3: Extreme Scenarios','Part 3: Extreme Scenarios','Part 3: Extreme Scenarios','Part 4: You and Others','Part 4: You and Others','Part 4: You and Others','Part 4: You and Others','Part 4: You and Others','Part 4: You and Others','Part 4: You and Others','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself','Part 5: How You See Yourself'],
+    prevBtn: '← Back',
+    nextBtn: 'Next →',
+    finishBtn: 'See Result →',
+    adAnalyzing: 'ANALYZING YOUR PERSONALITY',
+    adTitle: 'Finding your star…',
+    adTitle2: 'Generating your result…',
+    adSub: 'Based on your 30 answers',
+    adCountdown: 'Result in',
+    adCountdown2: 'seconds',
+    resultEyebrow: 'YOU ARE',
+    resultPctLabel: 'match',
+    resultSectionDesc: 'Personality',
+    resultSectionDestiny: 'World Cup Destiny',
+    resultSectionPartner: 'Best Partner',
+    resultSectionSimilar: 'Similar Stars',
+    partnerSub: 'A perfect match on the pitch',
+    shareBtn: '📤 Share Result',
+    retryBtn: 'Retake',
+  }
+}
+
+const questionsEn = [
+  { id:"Q1", text:"You did something important and failed. Your first reaction?", options:[{key:"A",text:"Review every mistake, find each failure point"},{key:"B",text:"Stay silent for hours, then tell yourself you'll win next time"},{key:"C",text:"Tell a friend it's fine, then process it alone"},{key:"D",text:"Feel like you gave it your all — and make peace with that"}] },
+  { id:"Q2", text:"Someone publicly questions your ability. You:", options:[{key:"A",text:"Say nothing. Let the results speak"},{key:"B",text:"Push back immediately, no backing down"},{key:"C",text:"Smile and acknowledge their view — but remember it"},{key:"D",text:"Doubt yourself for a second, then get back up"}] },
+  { id:"Q3", text:"Your team is on the verge of collapse. You:", options:[{key:"A",text:"Step up and carry it, even if you're exhausted"},{key:"B",text:"Quietly do more without saying a word"},{key:"C",text:"Find the core problem and solve it precisely"},{key:"D",text:"Stabilize the mood first, then figure out a plan"}] },
+  { id:"Q4", text:"Three losses in a row. Your state of mind?", options:[{key:"A",text:"The more I lose, the more I want to win"},{key:"B",text:"Need one night alone, start fresh tomorrow"},{key:"C",text:"Talk it out with someone — that's enough"},{key:"D",text:"Change approach: failure means the direction needs adjusting"}] },
+  { id:"Q5", text:"Someone outworks you, but you're more talented. Your take?", options:[{key:"A",text:"Talent is the starting line. Effort is the finish line"},{key:"B",text:"If I have the gift, I'm using it — get ahead first"},{key:"C",text:"A little anxious, but I won't admit it"},{key:"D",text:"Both matter. You can't have one without the other"}] },
+  { id:"Q6", text:"At a gathering with friends, you're usually:", options:[{key:"A",text:"The one making sure everyone has a good time"},{key:"B",text:"Quiet, but when you speak, it counts"},{key:"C",text:"Observing, then dropping one line that shifts the whole room"},{key:"D",text:"Enjoying it — but also happy to leave early"}] },
+  { id:"Q7", text:"A friendship starts to fade. You:", options:[{key:"A",text:"Reach out — relationships need tending"},{key:"B",text:"Let it go. If it fades, it fades"},{key:"C",text:"Notice it but pretend you don't"},{key:"D",text:"Analyze it and wonder what you did wrong"}] },
+  { id:"Q8", text:"Someone's making a mistake you spotted long ago. You:", options:[{key:"A",text:"Say it directly — staying quiet is worse"},{key:"B",text:"Wait until they ask"},{key:"C",text:"Drop a subtle hint"},{key:"D",text:"Let them find out themselves. That's how people grow"}] },
+  { id:"Q9", text:"Someone compliments you. Your reaction?", options:[{key:"A",text:"Happy — but say it's still not enough"},{key:"B",text:"Thank them, then keep going"},{key:"C",text:"A little embarrassed, but secretly pleased"},{key:"D",text:"Ask exactly what they mean — you want specifics"}] },
+  { id:"Q10", text:"Your ideal day looks like:", options:[{key:"A",text:"Efficient, productive — a sense of accomplishment by night"},{key:"B",text:"No plan. Go wherever the day takes you"},{key:"C",text:"With the people who matter. Anything goes"},{key:"D",text:"Alone and quiet. Recharging"}] },
+  { id:"Q11", text:"You didn't make it to a stage you deserved. The closest reason?", options:[{key:"A",text:"Someone made the decision without even asking me"},{key:"B",text:"The team around me couldn't get me there"},{key:"C",text:"I've been on that stage — this time it was just time"},{key:"D",text:"I chose a different path myself"}] },
+  { id:"Q12", text:"You have enormous talent, but fate keeps blocking you. You:", options:[{key:"A",text:"Keep waiting. The moment will come"},{key:"B",text:"Find another path. Talent can shine elsewhere"},{key:"C",text:"Fight harder — anger is fuel"},{key:"D",text:"Accept it. Some things can't be changed by effort alone"}] },
+  { id:"Q13", text:"If you could only choose one:", options:[{key:"A",text:"Remembered by everyone, but lonely forever"},{key:"B",text:"Truly understood by a few, in an ordinary life"},{key:"C",text:"One brief moment of glory — but that moment is eternal"},{key:"D",text:"Steady and consistent — no peaks, but no crashes either"}] },
+  { id:"Q14", text:"Final minute, your team is down by one. You're on. You:", options:[{key:"A",text:"I was born for moments like this"},{key:"B",text:"Stay calm. There's always more time than you think"},{key:"C",text:"Legs a little shaky — but once I'm in, I go all out"},{key:"D",text:"Find whoever's in form and give them the ball"}] },
+  { id:"Q15", text:"If your life were a match, what minute are you in?", options:[{key:"A",text:"Just finished the first half. Still catching my breath"},{key:"B",text:"Second half just started. Finally finding my rhythm"},{key:"C",text:"Injury time. The most critical moment"},{key:"D",text:"The whistle blew — but I still want to keep playing"}] },
+  { id:"Q16", text:"You helped someone fully, and they gave the credit to someone else. You:", options:[{key:"A",text:"Set the record straight right there"},{key:"B",text:"Say nothing — but never help them again"},{key:"C",text:"Doesn't matter. I know what I did"},{key:"D",text:"Hurt, but let it go"}] },
+  { id:"Q17", text:"You notice someone slacking in the team. You:", options:[{key:"A",text:"Call it out — everyone's watching"},{key:"B",text:"Talk privately, give them a way to save face"},{key:"C",text:"Pick up the slack yourself, quietly"},{key:"D",text:"Let the leader handle it — that's their job"}] },
+  { id:"Q18", text:"Someone weaker challenges you. You:", options:[{key:"A",text:"Take it seriously — opponents come in all sizes"},{key:"B",text:"Hold back. No need to crush them"},{key:"C",text:"A little unbothered, but won't ignore it"},{key:"D",text:"Help them figure out where they actually belong"}] },
+  { id:"Q19", text:"Your best friend completely disagrees with you. You:", options:[{key:"A",text:"Hold your ground — friendship is separate from this"},{key:"B",text:"Really listen. Maybe they're right"},{key:"C",text:"Find the middle ground. Neither fully gives in"},{key:"D",text:"Agree on the surface, then do it your way anyway"}] },
+  { id:"Q20", text:"Someone keeps copying you. How do you see it?", options:[{key:"A",text:"Imitation is the highest form of recognition. I'll take it"},{key:"B",text:"Annoying, but not worth the energy"},{key:"C",text:"Push harder to stay ahead"},{key:"D",text:"Teach them — let them surpass you"}] },
+  { id:"Q21", text:"You led a group and the result fell short. You:", options:[{key:"A",text:"It's on me. I carry it"},{key:"B",text:"Review everyone's role together and improve"},{key:"C",text:"Take care of the team's feelings first, then fix things"},{key:"D",text:"Stay silent. The next result will speak"}] },
+  { id:"Q22", text:"Someone says you've changed. You:", options:[{key:"A",text:"I've always been this way. You just don't know me"},{key:"B",text:"Maybe. Growth means changing"},{key:"C",text:"Actually think about it — they might have a point"},{key:"D",text:"Just smile. No answer"}] },
+  { id:"Q23", text:"Your greatest gift?", options:[{key:"A",text:"Staying clear-headed when things are hardest"},{key:"B",text:"Making the people around me better"},{key:"C",text:"Always thinking one step ahead"},{key:"D",text:"Don't know yet — but I know I haven't shown it all"}] },
+  { id:"Q24", text:"Your biggest regret in life will probably be:", options:[{key:"A",text:"A moment when I didn't push a little harder"},{key:"B",text:"A relationship I didn't hold on to"},{key:"C",text:"A stage I was meant to stand on"},{key:"D",text:"Still figuring it out — because it's not over"}] },
+  { id:"Q25", text:"Can't sleep at night. What's on your mind?", options:[{key:"A",text:"Where I could have done better today"},{key:"B",text:"Things I never said out loud"},{key:"C",text:"What if I'd chosen differently back then"},{key:"D",text:"Nothing specific. Just can't sleep"}] },
+  { id:"Q26", text:"How others see you vs. who you really are?", options:[{key:"A",text:"Very different. No one really knows me"},{key:"B",text:"A little off, but it doesn't bother me"},{key:"C",text:"Pretty accurate. I live transparently"},{key:"D",text:"Not sure — I'm not even certain who I really am"}] },
+  { id:"Q27", text:"If someone wrote your biography, the last line would be:", options:[{key:"A",text:"He should have been there — but his name wasn't on the list"},{key:"B",text:"He carried the whole ruin alone — but the ruin couldn't carry him back"},{key:"C",text:"He left the pitch — but the pitch never left him"},{key:"D",text:"He won people over with results, and they were glad to be won"}] },
+  { id:"Q28", text:"The most underestimated thing about you?", options:[{key:"A",text:"How hard I work — no one sees it"},{key:"B",text:"How much I matter to others — they don't realize"},{key:"C",text:"I'm much sharper than I look"},{key:"D",text:"Nothing. I think people read me pretty well"}] },
+  { id:"Q29", text:"One day you're gone. What do you want to be remembered for?", options:[{key:"A",text:"He never gave up"},{key:"B",text:"He made me better"},{key:"C",text:"He was different"},{key:"D",text:"He was here. Really here"}] },
+  { id:"Q30", text:"Last question — where is your story right now?", options:[{key:"A",text:"The prologue just ended. The real story hasn't started"},{key:"B",text:"The climax — every day is on fire"},{key:"C",text:"Somewhere in the middle, hit a wall — but still going"},{key:"D",text:"Some chapters closed before they were finished. A little sad"}] },
+]
+
+const starsEn = {
+  "梅西": { name:"Messi", country:"Argentina", type:"The Quiet Legend", desc1:"The one who makes the room feel different — quieter when you leave, but somehow more incomplete", quote:"Genius doesn't explain itself. Time does." },
+  "C罗": { name:"Ronaldo", country:"Portugal", type:"The Iron Will", desc1:"The one who says 'not enough' when everyone else says 'that's fine'", quote:"Winning is the only ending you accept." },
+  "姆巴佩": { name:"Mbappé", country:"France", type:"The Cold Ambition", desc1:"The one who smiles while making moves — and somehow you still think he's on your side", quote:"Composure isn't coldness. It's delayed satisfaction." },
+  "哈兰德": { name:"Haaland", country:"Norway", type:"The Pure Scorer", desc1:"The one worrying about lunch while everyone else worries about the meaning of life", quote:"The world is complicated. Scoring isn't." },
+  "贝林厄姆": { name:"Bellingham", country:"England", type:"The Born Leader", desc1:"The one who lives like they're 40 at age 20 — but still has fire in their eyes", quote:"Born to shine. No reason needed." },
+  "亚马尔": { name:"Yamal", country:"Spain", type:"The Fearless Prodigy", desc1:"The one no one knows how to evaluate — because the standard doesn't exist yet", quote:"Fearless — not because danger is unknown, but because there's no time to be afraid." },
+  "维尼修斯": { name:"Vinicius Jr.", country:"Brazil", type:"The Passionate One", desc1:"The one whose emotions hit like a wave — but once it passes, clearer than anyone", quote:"Those who've burned brightest know what real means." },
+  "内马尔": { name:"Neymar", country:"Brazil", type:"The Maverick", desc1:"The one who could get by on talent alone — but chooses charm too", quote:"Talent is a gift. Gifts are meant to be enjoyed." },
+  "凯恩": { name:"Kane", country:"England", type:"The Quiet Carrier", desc1:"The one who did a hundred things right — but only gets remembered for the one that didn't work", quote:"Not every effort has an ending. But the effort itself is the answer." },
+  "莫德里奇": { name:"Modrić", country:"Croatia", type:"The Invisible Maestro", desc1:"The one no one notices walking in — but everyone asks about on the way out", quote:"True presence is making people forget you're even trying." },
+  "久保建英": { name:"Kubo", country:"Japan", type:"The Quiet Breaker", desc1:"The one who grew up under pressure — and never broke", quote:"Pressure is fuel, not an obstacle." },
+  "孙兴慜": { name:"Son", country:"South Korea", type:"The Carrier", desc1:"The one who runs the full ninety with everyone's expectations on their back — still smiling", quote:"Some play for themselves. Some play for everyone. You're the second kind." },
+  "萨卡": { name:"Saka", country:"England", type:"The Steady Light", desc1:"The one who makes everything feel a little less impossible", quote:"Ease is the hardest skill to learn." },
+  "穆西亚拉": { name:"Musiala", country:"Germany", type:"The Instinct Player", desc1:"The one whose next move no one can predict — not even themselves", quote:"Instinct can't be scheduled. It can only be waited for." },
+  "维尔茨": { name:"Wirtz", country:"Germany", type:"The Precision Thinker", desc1:"The one who's already thought three moves ahead before the ball arrives", quote:"Think it through first. Every step counts." },
+  "恩佐": { name:"Enzo Fernández", country:"Argentina", type:"The Engine", desc1:"The one no one notices — until everything falls apart without them", quote:"Running hard isn't performance. It's habit." },
+  "哈基米": { name:"Hakimi", country:"Morocco", type:"The Dark Horse", desc1:"The one everyone underestimates — then can't catch", quote:"Being underestimated is a gift. No one sees you coming." },
+  "范戴克": { name:"Van Dijk", country:"Netherlands", type:"The Anchor", desc1:"The one everyone panics without — and forgets about when they're there", quote:"The best presence is leaving chaos nowhere to land." },
+  "萨拉赫": { name:"Salah", country:"Egypt", type:"The Comeback King", desc1:"The one who gets written off a hundred times — and stands back up on the hundred and first", quote:"Comebacks aren't luck. They're what happens when accumulation hits a breaking point." },
+  "佩德里": { name:"Pedri", country:"Spain", type:"The Artist", desc1:"The one who makes complex things simple — and simple things into art", quote:"Football is a language. Yours is poetry." },
+  "诺伊尔": { name:"Neuer", country:"Germany", type:"The Last Wall", desc1:"The one who is the last line of defense — but never looks like it", quote:"What's protected isn't just the goal. It's everyone's confidence." },
+  "卢卡库": { name:"Lukaku", country:"Belgium", type:"The Happy One", desc1:"The one still thinking about dinner while the world is in crisis", quote:"Critics, be quiet. Believers, follow me." },
+  "沃齐尼亚": { name:"Vozinha", country:"Cape Verde", type:"The Late Bloomer", desc1:"The one who says 'not yet' when everyone else says 'too late'", quote:"The right moment is never too late — as long as you're still here." },
+  "B费": { name:"Bruno Fernandes", country:"Portugal", type:"The Controversial Essential", desc1:"The one everyone has opinions about — but can't do without", quote:"Being talked about means being worth talking about." },
+  "阿尔瓦雷斯": { name:"Álvarez", country:"Argentina", type:"The Right Choice", desc1:"The one who chose the right team — then proved they deserved to be there", quote:"Choose the right direction. Then the effort won't be wasted." },
+  "登贝莱": { name:"Dembélé", country:"France", type:"The Last Laugh", desc1:"The one everyone wrote off — and then won the Golden Ball", quote:"The last one laughing never explains what they were doing." },
+  "奥利塞": { name:"Olise", country:"France", type:"The Surprise", desc1:"The one no one watches — until the moment they can't look away", quote:"The best twist is never telegraphed." },
+  "帕尔默": { name:"Palmer", country:"England", type:"The Overlooked", desc1:"You know you should have been there. But you weren't.", quote:"The absent one is sometimes remembered more than those who showed up.", destinyDesc:"You should have been there — but someone else made the call. Talent never disappears. It just sometimes has to wait for a fair chance." },
+  "克瓦拉茨赫利亚": { name:"Kvaratskhelia", country:"Georgia", type:"The Missed One", desc1:"You stood at the fence, watching others walk onto that grass. The wind moved your hair. You didn't.", quote:"Some people are born to be mourned. But there's a rare beauty in that.", destinyDesc:"You stood outside, watching others step onto that stage. It's not that you weren't good enough. The world just wasn't ready to hold someone like you." },
+  "苏亚雷斯": { name:"Suárez", country:"Uruguay", type:"The True Lover", desc1:"You sat in the stands with a drink in hand, a smile that couldn't quite be named.", quote:"Those who truly loved it — they always look back one more time.", destinyDesc:"Your World Cup continues in the stands. Some play with their feet. Some play with their hearts. You're the second kind — so you never really leave." },
+}
+
+const destinyEn = {
+  '冠军':   { emoji:'🏆', title:"You're the one who lifts the trophy", desc:'Not luck. You were ready from day one.' },
+  '亚军':   { emoji:'🔥', title:"You made it to the last step — but didn't cross it", desc:"This isn't failure. This is the closest anyone gets to perfect." },
+  '四强':   { emoji:'⚡', title:'You proved yourself — but the story stopped at its best moment', desc:'People say top four is great. You know you could have gone further.' },
+  '八强':   { emoji:'⚔️', title:"You beat most of them — but that door didn't open", desc:"No regrets. But given another shot, you'd be different." },
+  '十六强': { emoji:'🫡', title:"You got in — just didn't get to make the world remember you", desc:"That's okay. Some stories start from the middle." },
+  '小组赛出局': { emoji:'😢', title:"You showed up, you fought — just not your moment", desc:"Some stages need waiting for. And you still have time." },
+  '无缘参赛': { emoji:'⭐', title:"Absent is still a kind of presence", desc:"You should have been there." },
+}
+
+function setLang(lang) {
+  currentLang = lang
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh')
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en')
+
+  const t = i18n[lang]
+
+  // landing
+  const eyebrow = document.querySelector('.landing-eyebrow')
+  if (eyebrow) eyebrow.textContent = t.landingEyebrow
+
+  const titleMain = document.getElementById('landing-title-main')
+  if (titleMain) titleMain.textContent = t.landingTitle
+  const highlight = document.getElementById('landing-title-highlight')
+  if (highlight) highlight.textContent = t.landingHighlight
+
+  const subtitle = document.querySelector('.landing-subtitle')
+  if (subtitle) subtitle.innerHTML = t.landingSubtitle
+
+  const startBtn = document.querySelector('.btn-start')
+  if (startBtn) startBtn.textContent = t.landingStart
+
+  const meta = document.querySelector('.landing-meta')
+  if (meta) meta.textContent = t.landingMeta
+
+  // if quiz is active, re-render current question
+  if (document.getElementById('screen-quiz').classList.contains('active')) {
+    renderQuestion()
+  }
+
+  // nav buttons
+  const prevBtn = document.getElementById('btn-prev')
+  if (prevBtn) prevBtn.textContent = t.prevBtn
+
+  const nextBtn = document.getElementById('btn-next')
+  if (nextBtn) {
+    const isLast = currentQ === 29
+    nextBtn.textContent = isLast ? t.finishBtn : t.nextBtn
+  }
+
+  // result page labels
+  const eyebrowR = document.querySelector('.result-eyebrow')
+  if (eyebrowR) eyebrowR.textContent = t.resultEyebrow
+
+  const pctLabel = document.querySelector('.result-pct-label')
+  if (pctLabel) pctLabel.textContent = t.resultPctLabel
+
+  document.querySelectorAll('.result-section-title').forEach((el, i) => {
+    const keys = ['resultSectionDesc','resultSectionDestiny','resultSectionPartner','resultSectionSimilar']
+    if (keys[i]) el.textContent = t[keys[i]]
+  })
+
+  const partnerSub = document.querySelector('.partner-label')
+  if (partnerSub) partnerSub.textContent = t.partnerSub
+
+  const shareBtn = document.querySelector('.btn-share')
+  if (shareBtn) shareBtn.textContent = t.shareBtn
+
+  const retryBtn = document.querySelector('.btn-retry')
+  if (retryBtn) retryBtn.textContent = t.retryBtn
+
+  // 广告页文字
+  if (document.getElementById('ad-sub-text')) {
+    document.getElementById('ad-sub-text').textContent = t.adSub
+    document.getElementById('ad-countdown-label').textContent = t.adCountdown
+    document.getElementById('ad-countdown-suffix').textContent = t.adCountdown2
+  }
+
+  // 如果结果页是active，重新渲染结果
+  if (document.getElementById('screen-result').classList.contains('active')) {
+    showResult()
+  }
+}
+
+function getQuestions() {
+  return currentLang === 'en' ? questionsEn : questions
+}
+
+function getStarData(zhName) {
+  const base = stars[zhName]
+  if (currentLang === 'en') {
+    const en = starsEn[zhName]
+    if (en) return { ...base, name: en.name, country: en.country, type: en.type, desc1: en.desc1, quote: en.quote, destinyDesc: en.destinyDesc }
+  }
+  return base
+}
+
+function getDestinyData(destinyKey) {
+  if (currentLang === 'en') return destinyEn[destinyKey]
+  return destinyLevels[destinyKey]
+}
+
+</script>
+</body>
+</html>

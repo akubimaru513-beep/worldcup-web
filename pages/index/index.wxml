@@ -1,0 +1,26 @@
+<view class="container">
+  <view class="hero">
+    <view class="trophy">🏆</view>
+    <view class="year">2026</view>
+    <view class="title">世界杯球星</view>
+    <view class="subtitle">人格测试</view>
+    <view class="divider"></view>
+    <view class="desc">30道题，测出你最像哪位巨星</view>
+    <view class="stars-row">
+      <text class="star-tag">梅西</text>
+      <text class="star-tag">C罗</text>
+      <text class="star-tag">姆巴佩</text>
+      <text class="star-tag">哈兰德</text>
+    </view>
+    <view class="stars-row">
+      <text class="star-tag">贝林厄姆</text>
+      <text class="star-tag">维尼修斯</text>
+      <text class="star-tag">凯恩</text>
+    </view>
+  </view>
+
+  <view class="footer">
+    <button class="btn-start" bindtap="onStart">开始测试</button>
+    <view class="hint">约需 5 分钟 · 选直觉 · 无对错</view>
+  </view>
+</view>

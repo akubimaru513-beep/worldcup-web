@@ -1,0 +1,115 @@
+.quiz-container {
+  min-height: 100vh;
+  padding: 40rpx 48rpx 60rpx;
+  background: linear-gradient(180deg, #0d0d1a 0%, #1a1a2e 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 60rpx;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6rpx;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e8b86d, #f0cc88);
+  border-radius: 3rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 24rpx;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+
+.question-wrap {
+  flex: 0 0 auto;
+  margin-bottom: 56rpx;
+}
+
+.q-index {
+  font-size: 26rpx;
+  color: #e8b86d;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+  letter-spacing: 2rpx;
+}
+
+.q-text {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.options-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  flex: 1;
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 24rpx;
+  padding: 32rpx 32rpx;
+  background: rgba(255,255,255,0.06);
+  border: 2rpx solid rgba(255,255,255,0.1);
+  border-radius: 20rpx;
+  transition: all 0.25s ease;
+}
+
+.option-item.selected {
+  background: rgba(232,184,109,0.15);
+  border-color: #e8b86d;
+  transform: scale(0.98);
+}
+
+.option-item.dimmed {
+  opacity: 0.35;
+}
+
+.option-key {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(232,184,109,0.2);
+  border: 2rpx solid rgba(232,184,109,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #e8b86d;
+  margin-top: 2rpx;
+}
+
+.option-item.selected .option-key {
+  background: #e8b86d;
+  color: #1a1a2e;
+  border-color: #e8b86d;
+}
+
+.option-text {
+  font-size: 30rpx;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.6;
+}
+
+.option-item.selected .option-text {
+  color: #fff;
+}

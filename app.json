@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/quiz/quiz",
+    "pages/ad/ad",
+    "pages/result/result"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1a1a2e",
+    "navigationBarTitleText": "世界杯球星人格测试",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#1a1a2e"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

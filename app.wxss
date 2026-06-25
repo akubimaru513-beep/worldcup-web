@@ -1,0 +1,32 @@
+page {
+  background: #1a1a2e;
+  color: #fff;
+  font-family: -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 28rpx 0;
+  background: linear-gradient(135deg, #e8b86d, #c9a227);
+  color: #1a1a2e;
+  font-size: 34rpx;
+  font-weight: 700;
+  border-radius: 60rpx;
+  text-align: center;
+  letter-spacing: 2rpx;
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 26rpx 0;
+  background: transparent;
+  border: 2rpx solid #e8b86d;
+  color: #e8b86d;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 60rpx;
+  text-align: center;
+}

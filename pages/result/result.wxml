@@ -1,0 +1,89 @@
+<view class="result-container" wx:if="{{mainStar}}">
+
+  <!-- Module 1: 相似度排名 -->
+  <view class="module module-similarity">
+    <view class="module-label">与你最相似的球星</view>
+
+    <view class="main-star-card">
+      <view class="main-star-img-wrap">
+        <image class="main-star-img" src="{{mainImgSrc}}" mode="aspectFill"/>
+        <view class="pct-badge">{{mainStar.pct}}%</view>
+      </view>
+      <view class="main-star-name">{{mainStar.name}}</view>
+      <view class="main-star-type">{{mainStarData.type}}</view>
+      <view class="main-star-country">{{mainStarData.country}}</view>
+    </view>
+
+    <!-- 第2、3名 -->
+    <view class="runner-ups">
+      <view
+        class="runner-up-item"
+        wx:for="{{top3}}"
+        wx:key="name"
+        wx:if="{{index > 0}}"
+      >
+        <view class="ru-rank">{{index + 1}}</view>
+        <view class="ru-info">
+          <view class="ru-name">{{item.name}}</view>
+          <view class="ru-bar-wrap">
+            <view class="ru-bar" style="width: {{item.pct}}%"></view>
+          </view>
+        </view>
+        <view class="ru-pct">{{item.pct}}%</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Module 2: 世界杯命运 -->
+  <view class="module module-destiny">
+    <view class="module-label">世界杯命运</view>
+    <view class="destiny-card">
+      <view class="destiny-emoji">{{destinyInfo.emoji}}</view>
+      <view class="destiny-title">{{destinyInfo.title}}</view>
+      <view class="destiny-desc">{{destinyInfo.desc}}</view>
+      <view class="destiny-extra" wx:if="{{mainStarData.destinyDesc}}">
+        {{mainStarData.destinyDesc}}
+      </view>
+    </view>
+  </view>
+
+  <!-- Module 3: 最佳搭档 -->
+  <view class="module module-partner" wx:if="{{partnerData}}">
+    <view class="module-label">最佳搭档</view>
+    <view class="partner-card">
+      <view class="partner-img-wrap">
+        <image class="partner-img" src="{{partnerImgSrc}}" mode="aspectFill"/>
+      </view>
+      <view class="partner-info">
+        <view class="partner-name">{{partnerData.name}}</view>
+        <view class="partner-country">{{partnerData.country}}</view>
+        <view class="partner-type">{{partnerData.type}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Module 4: 球星画像 -->
+  <view class="module module-profile">
+    <view class="module-label">球星画像</view>
+    <view class="profile-card">
+      <view class="profile-quote">"{{mainStarData.quote}}"</view>
+      <view class="profile-divider"></view>
+      <view class="profile-desc">{{mainStarData.desc1}}</view>
+      <view class="profile-action" wx:if="{{mainStarData.action}}">
+        <text class="action-label">招牌动作 </text>
+        <text class="action-text">{{mainStarData.action}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-row">
+    <button class="btn-share" open-type="share">分享给朋友</button>
+    <button class="btn-retry" bindtap="onRetry">再测一次</button>
+  </view>
+
+</view>
+
+<view class="loading-wrap" wx:else>
+  <view class="loading-text">结果计算中…</view>
+</view>
